@@ -32,20 +32,21 @@
 // };
 
 // export default Classes;
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus } from "lucide-react"; // Plus Icon for 'Create' Button
+import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 const Classes = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:5000/api/classes/my-classes"); // Adjust API endpoint
+                const response = await fetch("http://localhost:5000/api/classes/my-classes"); 
                 if (!response.ok) throw new Error("Failed to fetch data");
                 const result = await response.json();
                 setData(result);
@@ -60,9 +61,11 @@ const Classes = () => {
 
     return (
         <div className="relative w-full min-h-screen overflow-hidden">
-            
             {/* Background */}
-            <div className="fixed inset-0 w-full h-screen bg-gradient-to-br from-cyan-950 via-blue-100 to-purple-500">
+            <div 
+                className="fixed inset-0 w-full h-screen bg-gradient-to-br from-cyan-950 via-blue-100 to-purple-500"
+                style={{ pointerEvents: "none" }} // Prevents background from blocking interactions
+            >
                 <motion.h1 
                     className="absolute inset-0 flex items-center justify-center text-[15vw] font-extrabold text-gray-300 opacity-55 select-none"
                     initial={{ opacity: 0, scale: 0 }}
@@ -88,13 +91,15 @@ const Classes = () => {
                             {data.map((item) => (
                                 <motion.div
                                     key={item.id}
-                                    className="p-4 bg-transparent  shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full"
+                                    className="p-4 bg-transparent shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ duration: 0.3 }}
                                 >
                                     <div className="flex-1">
-                                        <h3 className="text-lg font-bold  text-white">Class Name: {item.title}</h3>
-                                        <p className=" text-white">Description: {item.description}</p>
+                                        <h3 className="text-lg font-bold text-white">
+                                            Class Name: {item.class_name}
+                                        </h3>
+        
                                     </div>
                                 </motion.div>
                             ))}
@@ -102,15 +107,16 @@ const Classes = () => {
                     )}
                 </div>
             </section>
-
-            {/* Create Button (Bottom-Right Corner) */}
+            
+            {/* Floating Plus Button with higher z-index */}
             <motion.button
+                className="fixed z-20 bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
+                style={{ pointerEvents: "auto" }} // Ensures button is clickable
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="fixed top-16 right-10 bg-white text-black p-4 rounded-full shadow-lg flex items-center justify-center"
+                onClick={() => navigate("/createclass")}
             >
-                <span className="text-lg text-center justify-center font-semibold"> Create  </span>
-                <Plus className="w-6 h-7" />
+                <Plus size={24} />
             </motion.button>
         </div>
     );

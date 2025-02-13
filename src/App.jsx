@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Instagram from "./pages/instagram";
 import Facebook from "./pages/facebook";
 import Youtube from "./pages/youtube";
+import ClassCreate from "./components/classcreate";
 const App = () => {
   return (
     <Router>
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/instagram" element={<Instagram/>}/>
         <Route path="/youtube" element={<Youtube/>}/>
         <Route path="/facebook" element={<Facebook/>}/>
+        <Route path="/createclass" element={<ClassCreate />} />
       </Routes>
     </Router>
   );
