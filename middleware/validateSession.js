@@ -15,12 +15,15 @@ export async function validateSession(req, res, next) {
     }
 
     const session = result.rows[0];
+
+    // Check session expiration
     if (new Date() > new Date(session.expires_at)) {
-    //   await pool.query('DELETE FROM sessions WHERE session_id = $1', [sessionID]);
-      return res.status(401).json({ error: 'Session expired or invalid' });
+      await pool.query('DELETE FROM sessions WHERE session_id = $1', [sessionID]); // Cleanup expired session
+      res.clearCookie('sessionID'); // Remove stale session cookie
+      return res.status(401).json({ error: 'Session expired' });
     }
 
-    req.userId = session.user_id;
+    req.user = { id: session.user_id }; // Store user ID in request
     next();
   } catch (error) {
     console.error('Session validation error:', error);
