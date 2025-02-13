@@ -46,10 +46,14 @@ const Classes = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:5000/api/classes/my-classes"); 
+                const response = await fetch("http://localhost:5000/api/classes/my-classes",{
+                    method:"GET",
+                    credentials:"include",
+                }); 
                 if (!response.ok) throw new Error("Failed to fetch data");
                 const result = await response.json();
-                setData(result);
+                await setData(result.classes);
+                console.log(data,result.classes);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -90,13 +94,13 @@ const Classes = () => {
                         <div className="mt-4 w-full">
                             {data.map((item) => (
                                 <motion.div
-                                    key={item.id}
+                                    key={item.class_id}
                                     className="p-4 bg-transparent shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ duration: 0.3 }}
                                 >
                                     <div className="flex-1">
-                                        <h3 className="text-lg font-bold text-white">
+                                        <h3 className="text-lg font-bold text-black">
                                             Class Name: {item.class_name}
                                         </h3>
         
