@@ -8,7 +8,7 @@
 //             <div className="fixed inset-0 w-full h-screen bg-gradient-to-br from-cyan-950 via-blue-100 to-purple-500">
                 
 //                 {/* Large "AutoComms" Text in Background */}
-//                 <motion.h1 
+//                 <motion.h1
 //                     className="absolute inset-0 flex items-center justify-center text-[15vw] font-extrabold text-gray-300 opacity-55 select-none"
 //                     initial={{ opacity: 0, scale: 0 }}
 //                     animate={{ opacity: 0.2, scale: 1 }}
@@ -32,6 +32,11 @@
 // };
 
 // export default Classes;
+
+
+
+
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -99,7 +104,6 @@ const Classes = () => {
                                         <h3 className="text-lg font-bold text-white">
                                             Class Name: {item.class_name}
                                         </h3>
-        
                                     </div>
                                 </motion.div>
                             ))}
@@ -108,14 +112,14 @@ const Classes = () => {
                 </div>
             </section>
             
-            {/* Floating Plus Button with higher z-index */}
             <motion.button
-                className="fixed z-20 bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
+                className="fixed z-20 top-6 right-6 bg-blue-600 text-white p-6 shadow-lg hover:bg-blue-700 focus:outline-none"
                 style={{ pointerEvents: "auto" }} // Ensures button is clickable
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => navigate("/createclass")}
             >
+                <span className="flex ">Create</span>
                 <Plus size={24} />
             </motion.button>
         </div>

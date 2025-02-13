@@ -30,18 +30,18 @@ const Navbar = () => {
         try {
             // Call your signout endpoint; adjust method/headers as needed
             const response = await fetch("http://localhost:5000/api/auth/signout", {
-              method: "POST",
-              credentials: "include", // Ensure cookies are sent with the request
+                method: "POST",
+                credentials: "include", // Ensure cookies are sent with the request
             });
             if (!response.ok) {
-              throw new Error("Logout failed");
+                throw new Error("Logout failed");
             }
             // After logout, you can either reload the page or navigate to the home/login page.
             window.location.href = "/";
             setIsLoggedIn(false);
-          } catch (error) {
+        } catch (error) {
             console.error("Logout error:", error);
-          }
+        }
     };
 
     // Disable scrolling when login popup is open
