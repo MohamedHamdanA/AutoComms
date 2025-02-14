@@ -10,6 +10,8 @@ const createTables = async () => {
         name VARCHAR(100) NOT NULL,
         email VARCHAR(150) UNIQUE NOT NULL,
         google_id VARCHAR(255) UNIQUE,
+        access_token TEXT,
+        refresh_token TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -29,7 +31,7 @@ const createTables = async () => {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS google_forms (
         form_id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+        class_id INTEGER NOT NULL REFERENCES classes(class_id) ON DELETE CASCADE,
         form_title VARCHAR(255) NOT NULL,
         description TEXT,
         form_link TEXT NOT NULL,                                                            
@@ -42,8 +44,8 @@ const createTables = async () => {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS students (
         student_id SERIAL PRIMARY KEY,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) DEFAULT 'citchennai',
+        email VARCHAR(150) UNIQUE NOT NULL,
+        google_id VARCHAR(255) UNIQUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);

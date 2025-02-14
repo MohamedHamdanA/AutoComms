@@ -9,6 +9,7 @@ export async function getClassesForUser(req, res) {
   const userId = req.cookies.userId;
   try {
     const result = await pool.query("SELECT * FROM classes WHERE user_id = $1", [userId]);
+    console.log(result.rows);
     res.status(200).json({ classes: result.rows });
   } catch (error) {
     console.error("Error fetching classes:", error);
@@ -19,8 +20,6 @@ export async function getClassesForUser(req, res) {
 export async function createClass(req, res) {
   const userId = req.cookies.userId;
   let { class_name, schedule } = req.body;
-  class_name = "a";
-
   let newClass;
   try {
     // Create the class record for the user
@@ -59,7 +58,6 @@ export async function createClass(req, res) {
       // Process each row in the Excel file
       for (const row of data) {
         const email = row.email && row.email.trim();
-        console.log("email",email);
         if (!email) continue; // Skip rows without an email
         // Insert the student if not already exists.
         // ON CONFLICT ensures duplicate emails are not created.
@@ -98,24 +96,6 @@ export async function createClass(req, res) {
     console.log("no file recieved");
     // If no file is provided, just return the newly created class details
     return res.status(201).json({ class: newClass });
-  }
-}
-
-// Add a Google Form to a specific class
-export async function addGoogleForm(req, res) {
-  const classId = req.params.classId;
-  // Destructure the description along with form_title, form_link, and due_date
-  const { form_title, description, form_link, due_date } = req.body;
-  try {
-    const result = await pool.query(
-      `INSERT INTO google_forms (class_id, form_title, description, form_link, due_date)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [classId, form_title, description, form_link, due_date]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error("Error adding Google Form:", error);
-    res.status(500).json({ error: "Server error while adding Google Form" });
   }
 }
 

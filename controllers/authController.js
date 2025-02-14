@@ -1,85 +1,136 @@
+import { google } from 'googleapis';
 import pool from '../config/db.js';
-import oauth2Client from '../config/googleClient.js';
+import {oauth2Client} from '../config/UserGoogleClient.js';
 import { randomBytes } from 'crypto';
 import { storeSession, deleteSession } from './sessionService.js';
-import { google } from 'googleapis';
 
+// ✅ Generate a secure random token
 function generateRandomToken() {
-  return randomBytes(16).toString('hex');
+  return randomBytes(32).toString('hex');
 }
 
+// ✅ Set expiration time for session (24 hours)
 function getExpirationTime() {
   return new Date(Date.now() + 24 * 60 * 60 * 1000);
 }
 
+// ✅ Store OAuth tokens for Gmail API usage
+async function storeTeacherTokens(userId, tokens) {
+  const query = `
+    UPDATE users 
+    SET access_token = $1, refresh_token = $2 
+    WHERE user_id = $3;
+  `;
+  await pool.query(query, [tokens.access_token, tokens.refresh_token, userId]);
+}
+
+// ✅ Retrieve stored tokens
+async function getTeacherTokens(userId) {
+  const result = await pool.query(
+    `SELECT access_token, refresh_token FROM users WHERE user_id = $1;`,
+    [userId]
+  );
+  return result.rows[0];
+}
+
 const AuthController = {
-  // Redirect to Google OAuth2 consent screen
+  /**
+   * 🚀 1️⃣ Redirect User to Google OAuth2
+   */
   googleAuth: (req, res) => {
     const authUrl = oauth2Client.generateAuthUrl({
       access_type: 'offline',
-      scope: ['profile', 'email'],
+      scope: [
+        'profile',
+        'email',
+        'https://www.googleapis.com/auth/gmail.send' // Gmail API scope
+      ],
+      prompt: 'consent',
     });
     res.redirect(authUrl);
   },
 
-  // Handle OAuth2 callback
+  /**
+   * 🟢 2️⃣ Handle Google OAuth2 Callback
+   */
   googleAuthCallback: async (req, res) => {
-    const code = req.query.code;
+    const { code } = req.query;
+
+    if (!code) {
+      return res.status(400).json({ error: 'Authorization code is missing' });
+    }
 
     try {
-      // Exchange code for tokens
+      // 📥 Exchange code for tokens
       const { tokens } = await oauth2Client.getToken(code);
       oauth2Client.setCredentials(tokens);
 
-      // Get user info from Google
-      const oauth2 = google.oauth2({ auth: oauth2Client, version: 'v2' });
+      // 🧑 Get user profile from Google
+      const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });
       const { data: googleUser } = await oauth2.userinfo.get();
 
-      // Check if user exists in the database
-      let user = await pool.query('SELECT * FROM users WHERE email = $1', [googleUser.email]);
+      // 📤 Insert or update user in database
+      const userQuery = `
+        INSERT INTO users (name, email, google_id, access_token, refresh_token) 
+        VALUES ($1, $2, $3, $4, $5) 
+        ON CONFLICT (email) DO UPDATE 
+        SET google_id = EXCLUDED.google_id,
+            access_token = EXCLUDED.access_token,
+            refresh_token = EXCLUDED.refresh_token
+        RETURNING *;
+      `;
+      const values = [
+        googleUser.name,
+        googleUser.email,
+        googleUser.id,
+        tokens.access_token,
+        tokens.refresh_token
+      ];
+      const { rows } = await pool.query(userQuery, values);
+      const user = rows[0];
 
-      if (user.rows.length === 0) {
-        // Create a new user
-        user = await pool.query(
-          'INSERT INTO users (name, email, google_id) VALUES ($1, $2, $3) RETURNING *',
-          [googleUser.name, googleUser.email, googleUser.id]
-        );
-      } else {
-        user = user.rows[0];
-      }
-
-      // Create session and CSRF token
+      // ✅ Store session & CSRF token
       const sessionID = generateRandomToken();
       const csrfToken = generateRandomToken();
       const expiresAt = getExpirationTime();
 
       await storeSession(sessionID, user.user_id, csrfToken, expiresAt);
 
-      // Set cookies for session management
-      res.cookie('sessionID', sessionID, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-      res.cookie('csrfToken', csrfToken, { maxAge: 30 * 60 * 1000 });
-      res.cookie('userId', user.user_id);
-
-      res.status(200).json({message: 'Login Successfull'});
+      // ✅ Set secure cookies
+      res.cookie('sessionID', sessionID, { httpOnly: true, secure: true, sameSite: 'Strict', maxAge: 24 * 60 * 60 * 1000 });
+      res.cookie('csrfToken', csrfToken, { secure: true, sameSite: 'Strict', maxAge: 30 * 60 * 1000 });
+      res.cookie('userId', user.user_id, { httpOnly: true, secure: true, sameSite: 'Strict', maxAge: 24 * 60 * 60 * 1000 });
+      
+      res.redirect("http://localhost:5173/");
     } catch (error) {
-      console.error('Error during Google login:', error);
-      res.status(500).json({ error: 'Google login failed' });
+      console.error('Google login error:', error);
+      res.status(500).json({ error: 'Google login failed. Please try again.' });
     }
   },
 
+  /**
+   * 🚪 3️⃣ Handle User Signout
+   */
   signout: async (req, res) => {
     try {
       const sessionID = req.cookies.sessionID;
-      if (sessionID) {
-        await deleteSession(sessionID);
-        res.clearCookie('sessionID');
-        res.clearCookie('csrfToken');
-        res.clearCookie('userId');
+
+      if (!sessionID) {
+        return res.status(401).json({ error: 'No active session found' });
       }
+
+      // 🗑️ Delete session from database
+      await deleteSession(sessionID);
+      
+      // 🧹 Clear cookies
+      res.clearCookie('sessionID');
+      res.clearCookie('csrfToken');
+      res.clearCookie('userId');
+
       res.status(200).json({ message: 'Signout successful' });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Signout failed' });
+      console.error('Signout error:', error);
+      res.status(500).json({ error: 'Signout failed. Please try again.' });
     }
   },
 };

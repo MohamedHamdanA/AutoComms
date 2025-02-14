@@ -28,7 +28,7 @@ export async function validateSession(req, res, next) {
       return res.status(401).json({ error: 'Invalid session' });
     }
 
-    req.userId = session.user_id;
+    req.user = { id: session.user_id }; // Store user ID in request
     next();
   } catch (error) {
     console.error('Session validation error:', error);
