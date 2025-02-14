@@ -20,6 +20,7 @@ export async function validateSession(req, res, next) {
     if (new Date() > new Date(session.expires_at)) {
       await pool.query('DELETE FROM sessions WHERE session_id = $1', [sessionID]); // Cleanup expired session
       res.clearCookie('sessionID'); // Remove stale session cookie
+      res.clearCookie('csrfToken'); // Remove stale session cookie
       return res.status(401).json({ error: 'Session expired' });
     }
 
