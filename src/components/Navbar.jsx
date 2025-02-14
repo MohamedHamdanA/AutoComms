@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
@@ -44,6 +44,20 @@ const Navbar = () => {
         }
     };
 
+    const userMenuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+                setUserMenuOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [userMenuRef]);
+
     // Disable scrolling when login popup is open
     useEffect(() => {
         if (showLoginPopup) {
@@ -59,6 +73,7 @@ const Navbar = () => {
 
     return (
         <motion.nav
+
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -92,19 +107,19 @@ const Navbar = () => {
                 <AnimatePresence>
                     {userMenuOpen && (
                         <motion.div
-                            initial={{ opacity: 0, y: -10 }}
+                            ref={userMenuRef}
+                            initial={{ opacity: 0, y: 0 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
+                            exit={{ opacity: 0, y: 0 }}
                             transition={{ duration: 0.3 }}
                             className="absolute top-10 right-0 bg-white shadow-lg rounded-xl py-3 px-4 flex flex-col items-start space-y-2 w-40 backdrop-blur-lg bg-opacity-90"
                         >
                             {isLoggedIn ? (
                                 <>
-                                    <Link className="text-gray-700 hover:text-blue-600 transition">Profile</Link>
                                     <button onClick={handleLogout} className="text-gray-700 hover:text-blue-600 transition">Sign Out</button>
                                 </>
                             ) : (
-                                <button onClick={() => setShowLoginPopup(true)} className="text-gray-700 hover:text-blue-600 transition">Login</button>
+                                <button onClick={() => { setShowLoginPopup(true); setUserMenuOpen(!userMenuOpen); }} className="text-gray-700 hover:text-blue-600 transition">Login</button>
                             )}
                         </motion.div>
                     )}
@@ -115,9 +130,9 @@ const Navbar = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -10 }}
+                        initial={{ opacity: 0, y: 0 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
+                        exit={{ opacity: 0, y: 0 }}
                         className="absolute top-14 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-xl py-4 px-6 flex flex-col items-center space-y-4 w-[80%] backdrop-blur-lg bg-opacity-90"
                     >
                         <Link to="/" className="text-gray-700 font-semibold hover:text-blue-600 transition" onClick={() => setIsOpen(false)}>Home</Link>
