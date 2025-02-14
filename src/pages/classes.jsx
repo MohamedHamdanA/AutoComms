@@ -37,7 +37,7 @@
 
 
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; 
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
@@ -51,14 +51,13 @@ const Classes = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:5000/api/classes/my-classes",{
-                    method:"GET",
-                    credentials:"include",
+                const response = await fetch("http://localhost:5000/api/classes/my-classes", {
+                    method: "GET",
+                    credentials: "include",
                 }); 
                 if (!response.ok) throw new Error("Failed to fetch data");
                 const result = await response.json();
-                await setData(result.classes);
-                console.log(data,result.classes);
+                setData(result.classes);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -73,7 +72,7 @@ const Classes = () => {
             {/* Background */}
             <div 
                 className="fixed inset-0 w-full h-screen bg-gradient-to-br from-cyan-950 via-blue-100 to-purple-500"
-                style={{ pointerEvents: "none" }} // Prevents background from blocking interactions
+                style={{ pointerEvents: "none" }}
             >
                 <motion.h1 
                     className="absolute inset-0 flex items-center justify-center text-[15vw] font-extrabold text-gray-300 opacity-55 select-none"
@@ -100,13 +99,14 @@ const Classes = () => {
                             {data.map((item) => (
                                 <motion.div
                                     key={item.class_id}
-                                    className="p-4 bg-transparent shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full"
+                                    className="p-4 bg-transparent shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full cursor-pointer"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ duration: 0.3 }}
+                                    onClick={() => navigate(`/classes/${item.class_id}`)}
                                 >
                                     <div className="flex-1">
                                         <h3 className="text-lg font-bold text-black">
-                                            Class Name: {item.class_name}
+                                            {item.class_name}
                                         </h3>
                                     </div>
                                 </motion.div>
@@ -118,12 +118,12 @@ const Classes = () => {
             
             <motion.button
                 className="fixed z-20 top-6 right-6 bg-blue-600 text-white p-6 shadow-lg hover:bg-blue-700 focus:outline-none"
-                style={{ pointerEvents: "auto" }} // Ensures button is clickable
+                style={{ pointerEvents: "auto" }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => navigate("/createclass")}
             >
-                <span className="flex ">Create</span>
+                <span className="flex">Create</span>
                 <Plus size={24} />
             </motion.button>
         </div>
