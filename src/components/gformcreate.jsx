@@ -44,7 +44,7 @@ const Gformcreate = () => {
 
         try {
             // Replace with your API endpoint if needed
-            const response = await fetch("http://localhost:5000/api/googleforms", {
+            const response = await fetch("http://localhost:5000/api/google-form/create", {
                 method: "POST",
                 body: formData,
                 credentials: "include",

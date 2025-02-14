@@ -145,12 +145,29 @@ const ClassDetail = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        // const fetchClassDetails = async () => {
+        //     try {
+        //         const response = await fetch(`http://localhost:5000/api/classes/${classId}`, {
+        //             method: "GET",
+        //             credentials: "include",
+        //         });
+        //         if (!response.ok) throw new Error("Failed to fetch class details");
+        //         const result = await response.json();
+        //         setClassInfo(result.class);
+        //         setGoogleForms(result.google_forms);
+        //     } catch (err) {
+        //         setError(err.message);
+        //     } finally {
+        //         setLoading(false);
+        //     }
+        // };
+        // fetchClassDetails();
         // For demonstration, we are using static data.
         setGoogleForms([
             {
                 form_title: "Form 1",
                 form_link: "https://forms.google.com/forms/form1",
-                form_id: "form1",
+                form_id: "1",
                 form_description: "Sample description",
             },
             {
@@ -220,35 +237,35 @@ const ClassDetail = () => {
                             <div className="space-y-3 hover:">
                                 {googleForms.map((form) => (
                                     <motion.div
-                                            key={form.form_id}
-                                            className="p-4 bg-white shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full cursor-pointer"
-                                            whileHover={{ scale: 1.02 }}
-                                            transition={{ duration: 0.3 }}
-                                            onClick={() => navigate(`/classes/${classId}/${form.form_id}`)}
-                                        >
-                                            <div className="flex-1">
-                                                <h3 className="text-lg font-bold text-black">
-                                                    {form.form_title}
-                                                </h3>
-                                            </div>
-                                        </motion.div>
+                                        key={form.form_id}
+                                        className="p-4 bg-white shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full cursor-pointer"
+                                        whileHover={{ scale: 1.02 }}
+                                        transition={{ duration: 0.3 }}
+                                        onClick={() => navigate(`/classes/googleform/${classId}/${form.form_id}`)}
+                                    >
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-bold text-black">
+                                                {form.form_title}
+                                            </h3>
+                                        </div>
+                                    </motion.div>
                                 ))}
                             </div>
-                        // {data.map((item) => (
-                        //     <motion.div
-                        //         key={item.class_id}
-                        //         className="p-4 bg-white shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full cursor-pointer"
-                        //         whileHover={{ scale: 1.02 }}
-                        //         transition={{ duration: 0.3 }}
-                        //         onClick={() => navigate(`/classes/${item.class_id}`)}
-                        //     >
-                        //         <div className="flex-1">
-                        //             <h3 className="text-lg font-bold text-black">
-                        //                 {item.class_name}
-                        //             </h3>
-                        //         </div>
-                        //     </motion.div>
-                        // ))}
+                            // {data.map((item) => (
+                            //     <motion.div
+                            //         key={item.class_id}
+                            //         className="p-4 bg-white shadow-md rounded-lg mb-4 flex flex-col md:flex-row items-start md:items-center justify-between w-full cursor-pointer"
+                            //         whileHover={{ scale: 1.02 }}
+                            //         transition={{ duration: 0.3 }}
+                            //         onClick={() => navigate(`/classes/${item.class_id}`)}
+                            //     >
+                            //         <div className="flex-1">
+                            //             <h3 className="text-lg font-bold text-black">
+                            //                 {item.class_name}
+                            //             </h3>
+                            //         </div>
+                            //     </motion.div>
+                            // ))}
                         ) : (
                             <p className="text-gray-300">
                                 No forms available for this class.
@@ -264,7 +281,7 @@ const ClassDetail = () => {
                 style={{ pointerEvents: "auto" }}
                 whileHover={{ scale: 1.0 }}
                 whileTap={{ scale: 1.1 }}
-                onClick={() => navigate("/classes/creategoogleform")}
+                onClick={() => navigate(`/classes/googleform/create/${classId}`)}
             >
                 <span className="text-lg font-medium">Create</span>
                 <Plus size={24} />

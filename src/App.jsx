@@ -8,6 +8,7 @@ import Youtube from "./pages/youtube";
 import ClassCreate from "./components/classcreate";
 import ClassDetail from "./components/classDetails";
 import Gformcreate from "./components/gformcreate";
+import GformDetails from "./components/gformDetails";
 const App = () => {
   return (
     <Router>
@@ -20,7 +21,8 @@ const App = () => {
         <Route path="/facebook" element={<Facebook/>}/>
         <Route path="/createclass" element={<ClassCreate />} />
         <Route path="/classes/:classId" element={<ClassDetail />} />
-        <Route path="/classes/creategoogleform" element={<Gformcreate/>} />
+        <Route path="/classes/googleform/:classId/:gformId" element={<GformDetails />} />
+        <Route path="/classes/googleform/create/:classId" element={<Gformcreate/>} />
       </Routes>
     </Router>
   );
