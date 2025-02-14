@@ -1,10 +1,16 @@
-import { Router } from 'express';
-import formController from '../controllers/formController.js';
+// routes/formRoutes.js
+import express from 'express';
 import { validateSession } from '../middleware/validateSession.js';
 import { validateCsrf } from '../middleware/validateCsrf.js';
+import { createGoogleForm, getFormResponses } from '../controllers/formController.js';
 
-const router = Router();
+const router = express.Router();
 
-router.use("/:classId", validateSession, validateCsrf, formController);
+// Route for creating a Google Form and notifying students
+router.post('/create',validateSession, validateCsrf, createGoogleForm);
+
+// Route for fetching form responses and matching them with enrolled students
+router.get('/responses/:formId',validateSession, validateCsrf, getFormResponses);
 
 export default router;
+
