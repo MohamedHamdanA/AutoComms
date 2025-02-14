@@ -7,6 +7,7 @@ import Facebook from "./pages/facebook";
 import Youtube from "./pages/youtube";
 import ClassCreate from "./components/classcreate";
 import ClassDetail from "./components/classDetails";
+import Gformcreate from "./components/gformcreate";
 const App = () => {
   return (
     <Router>
@@ -19,7 +20,7 @@ const App = () => {
         <Route path="/facebook" element={<Facebook/>}/>
         <Route path="/createclass" element={<ClassCreate />} />
         <Route path="/classes/:classId" element={<ClassDetail />} />
-
+        <Route path="/classes/creategoogleform" element={<Gformcreate/>} />
       </Routes>
     </Router>
   );

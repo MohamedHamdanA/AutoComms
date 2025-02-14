@@ -15,7 +15,7 @@ const Classes = () => {
         //         const response = await fetch("http://localhost:5000/api/classes/my-classes", {
         //             method: "GET",
         //             credentials: "include",
-        //         }); 
+        //         });
         //         if (!response.ok) throw new Error("Failed to fetch data");
         //         const result = await response.json();
         //         setData(result.classes);
@@ -129,15 +129,16 @@ const Classes = () => {
             </section>
 
             <motion.button
-                className="fixed z-20 top-6 right-6 bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-purple-700 focus:outline-none transition-transform"
-                style={{ pointerEvents: "auto" }}
-                whileHover={{ scale: 1.0 }}
-                whileTap={{ scale: 1.1 }}
-                onClick={() => navigate("/createclass")}
-            >
-                <span className="text-lg font-medium">Create</span>
-                <Plus size={24} />
-            </motion.button>
+  className="fixed z-20 top-6 right-6 bg-purple-600 text-white px-4 py-2  md:px-6 md:py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-purple-700 focus:outline-none transition-transform"
+  style={{ pointerEvents: "auto" }}
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() => navigate("/createclass")}
+>
+  <span className="text-sm md:text-lg font-medium">Create</span>
+  <Plus size={20} className="md:w-6 md:h-6" />
+</motion.button>
+
 
         </div>
     );
