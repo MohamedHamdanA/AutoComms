@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import pool from '../config/db.js';
-import {oauth2Client} from '../config/UserGoogleClient.js';
+import {oauth2Client, AUTH_URL} from '../config/UserGoogleClient.js';
 import { randomBytes } from 'crypto';
 import { storeSession, deleteSession } from './sessionService.js';
 
@@ -38,16 +38,17 @@ const AuthController = {
    * 🚀 1️⃣ Redirect User to Google OAuth2
    */
   googleAuth: (req, res) => {
-    const authUrl = oauth2Client.generateAuthUrl({
-      access_type: 'offline',
-      scope: [
-        'profile',
-        'email',
-        'https://www.googleapis.com/auth/gmail.send' // Gmail API scope
-      ],
-      prompt: 'consent',
-    });
-    res.redirect(authUrl);
+    // const authUrl = oauth2Client.generateAuthUrl({
+    //   access_type: 'offline',
+    //   scope: [
+    //     'profile',
+    //     'email',
+    //     'https://www.googleapis.com/auth/gmail.send', // Gmail API scope
+    //     'https://www.googleapis.com/auth/forms.responses.readonly'
+    //   ],
+    //   prompt: 'consent',
+    // });
+    res.redirect(AUTH_URL);
   },
 
   /**

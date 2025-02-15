@@ -45,7 +45,7 @@ export async function createGoogleForm(req, res) {
     for (const student of students.rows) {
       await sendEmail(userId, student.email, subject, body);
     }
-
+    console.log("Mail sent success");
     res.status(201).json({ message: 'Form created and students notified!' });
   } catch (error) {
     console.error('Error creating form or sending emails:', error);
@@ -54,41 +54,72 @@ export async function createGoogleForm(req, res) {
 }
 
 /**
+ * Helper function to extract the actual Google Form ID from a form link.
+ * Example form link: "https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=sf_link"
+ */
+function extractFormId(formLink) {
+  const regex = /\/d\/e\/([^\/]+)/;
+  const match = formLink.match(regex);
+  return match ? match[1] : null;
+}
+
+/**
  * Fetch the responses for a Google Form using the teacher's access token,
  * and compare them with the students enrolled in a given class.
+ *
+ * Expected route: GET /api/google-form/responses/:classId/:formId
+ * Here, :formId is the database primary key for the google_forms record.
  */
 export async function getFormResponses(req, res) {
-  const { formId } = req.params;
-  const { classId } = req.query;
+  const { classId, formId } = req.params;
   const { userId } = req.cookies;
 
   if (!classId) {
-    return res.status(400).json({ error: "classId query parameter is required" });
+    return res.status(400).json({ error: "classId parameter is required" });
+  }
+  if (!formId) {
+    return res.status(400).json({ error: "formId parameter is required" });
   }
 
   try {
-    // Get teacher's access token from the database
+    // 1. Retrieve the Google Form record from the database to get the form_link.
+    const formRecord = await pool.query(
+      `SELECT form_link FROM google_forms WHERE form_id = $1 AND class_id = $2`,
+      [formId, classId]
+    );
+    if (formRecord.rowCount === 0) {
+      return res.status(404).json({ error: "Google Form record not found" });
+    }
+    const formLink = formRecord.rows[0].form_link;
+    // Extract the actual Google Form ID from the stored link.
+    const actualFormId = extractFormId(formLink);
+    console.log("FormId:",actualFormId);
+    // return res.status(400).json({ error: "Unable to extract Google Form ID from the form link" });
+    if (!actualFormId) {
+      return res.status(400).json({ error: "Unable to extract Google Form ID from the form link" });
+    }
+
+    // 2. Get teacher's access token from the database.
     const tokens = await pool.query(
       `SELECT access_token FROM users WHERE user_id = $1`,
       [userId]
     );
-    
     if (!tokens.rows[0]?.access_token) {
       return res.status(401).json({ error: 'Unauthorized - No access token' });
     }
 
-    // Set credentials and initialize the Google Forms API client
+    // 3. Set credentials and initialize the Google Forms API client.
     oauth2Client.setCredentials({ access_token: tokens.rows[0].access_token });
     const forms = google.forms({ version: 'v1', auth: oauth2Client });
 
-    // Fetch responses from the Google Form
+    // 4. Fetch responses from the Google Form using the extracted actualFormId.
     const response = await forms.forms.responses.list({
-      formId,
+      formId: actualFormId,
       pageSize: 100,
     });
     const responses = response.data.responses || [];
 
-    // Fetch all students enrolled in the specified class
+    // 5. Fetch all students enrolled in the specified class.
     const students = await pool.query(
       `SELECT s.student_id, s.email 
        FROM students s
@@ -97,7 +128,7 @@ export async function getFormResponses(req, res) {
       [classId]
     );
 
-    // Compare student emails against the responses
+    // 6. Compare student emails against the responses.
     const responseEmails = responses.map(r => r.respondentEmail);
     const completionStatus = students.rows.map(student => ({
       student_id: student.student_id,
@@ -105,6 +136,7 @@ export async function getFormResponses(req, res) {
       completed: responseEmails.includes(student.email) ? "Yes" : "No"
     }));
 
+    // 7. Return the compiled response.
     res.status(200).json({ 
       total_students: students.rowCount,
       responses: responses.length,

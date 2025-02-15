@@ -1,5 +1,5 @@
 import pool from '../config/db.js';
-import {oauth2Client} from '../config/studentGoogleClient.js';
+import {oauth2Client,AUTH_URL} from '../config/studentGoogleClient.js';
 import { randomBytes } from 'crypto';
 import { storeSession, deleteSession } from './sessionService.js';
 import { google } from 'googleapis';
@@ -17,11 +17,11 @@ const StudentAuthController = {
    * Redirects student to Google OAuth2 login page
    */
   googleAuth: (req, res) => {
-    const authUrl = oauth2Client.generateAuthUrl({
-      access_type: 'offline',
-      scope: ['profile', 'email'],
-    });
-    res.redirect(authUrl);
+    // const authUrl = oauth2Client.generateAuthUrl({
+    //   access_type: 'offline',
+    //   scope: ['profile', 'email'],
+    // });
+    res.redirect(AUTH_URL);
   },
 
   /**
