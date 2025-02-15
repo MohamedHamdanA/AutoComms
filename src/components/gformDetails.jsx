@@ -125,20 +125,38 @@ function GformDetails() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+            const response = await fetch(`http://localhost:5000/api/google-form/responses/${classId}/${formId}`, {
+                method: "GET",
+                credentials: "include",
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch form details");
+            }
+            const result = await response.json();
+            setData(result);
+            } catch (err) {
+            setError(err.message);
+            } finally {
+            setLoading(false);
+            }
+        };
+        fetchData();
         // For demonstration purposes, we're using static data.
         // In production, replace this with your API call.
-        const staticData = {
-            total_students: 3,
-            responses: 3,
-            completion_status: [
-                { student_id: 1, email: "student1@example.com", completed: "Yes" },
-                { student_id: 2, email: "student2@example.com", completed: "No" },
-                { student_id: 3, email: "student3@example.com", completed: "Yes" },
-            ],
-        };
-        setData(staticData);
-        setLoading(false);
-        setError(null);
+        // const staticData = {
+        //     total_students: 3,
+        //     responses: 3,
+        //     completion_status: [
+        //         { student_id: 1, email: "student1@example.com", completed: "Yes" },
+        //         { student_id: 2, email: "student2@example.com", completed: "No" },
+        //         { student_id: 3, email: "student3@example.com", completed: "Yes" },
+        //     ],
+        // };
+        // setData(staticData);
+        // setLoading(false);
+        // setError(null);
     }, [formId, classId]);
 
     return (

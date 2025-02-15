@@ -21,8 +21,9 @@ const App = () => {
         <Route path="/facebook" element={<Facebook/>}/>
         <Route path="/createclass" element={<ClassCreate />} />
         <Route path="/classes/:classId" element={<ClassDetail />} />
-        <Route path="/classes/googleform/:classId/:gformId" element={<GformDetails />} />
+        <Route path="/classes/googleform/:classId/:formId" element={<GformDetails />} />
         <Route path="/classes/googleform/create/:classId" element={<Gformcreate/>} />
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </Router>
   );

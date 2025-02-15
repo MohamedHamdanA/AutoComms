@@ -52,7 +52,7 @@ const ClassCreate = () => {
         setMessage("");
         const formData = new FormData();
         formData.append("class_name", className);
-        if (file) formData.append("fileUpload", file);
+        if (file) formData.append("file", file);
         try {
             if (!file) {
                 throw new Error("Please select a file");

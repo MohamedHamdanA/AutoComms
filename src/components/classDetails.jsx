@@ -145,50 +145,50 @@ const ClassDetail = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // const fetchClassDetails = async () => {
-        //     try {
-        //         const response = await fetch(`http://localhost:5000/api/classes/${classId}`, {
-        //             method: "GET",
-        //             credentials: "include",
-        //         });
-        //         if (!response.ok) throw new Error("Failed to fetch class details");
-        //         const result = await response.json();
-        //         setClassInfo(result.class);
-        //         setGoogleForms(result.google_forms);
-        //     } catch (err) {
-        //         setError(err.message);
-        //     } finally {
-        //         setLoading(false);
-        //     }
-        // };
-        // fetchClassDetails();
+        const fetchClassDetails = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/classes/${classId}`, {
+                    method: "GET",
+                    credentials: "include",
+                });
+                if (!response.ok) throw new Error("Failed to fetch class details");
+                const result = await response.json();
+                setClassInfo(result.class);
+                setGoogleForms(result.google_forms);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchClassDetails();
         // For demonstration, we are using static data.
-        setGoogleForms([
-            {
-                form_title: "Form 1",
-                form_link: "https://forms.google.com/forms/form1",
-                form_id: "1",
-                form_description: "Sample description",
-            },
-            {
-                form_title: "Form 2",
-                form_link: "https://forms.google.com/forms/form2",
-                form_id: "form2",
-                form_description: "Sample description",
-            },
-            {
-                form_title: "Form 3",
-                form_link: "https://forms.google.com/forms/form3",
-                form_id: "form3",
-                form_description: "Sample description",
-            },
-        ]);
-        setClassInfo({
-            class_name: "Sample Class",
-            description: "This is a sample description for the class.",
-        });
-        setLoading(false);
-        setError(null);
+        // setGoogleForms([
+        //     {
+        //         form_title: "Form 1",
+        //         form_link: "https://forms.google.com/forms/form1",
+        //         form_id: "1",
+        //         form_description: "Sample description",
+        //     },
+        //     {
+        //         form_title: "Form 2",
+        //         form_link: "https://forms.google.com/forms/form2",
+        //         form_id: "form2",
+        //         form_description: "Sample description",
+        //     },
+        //     {
+        //         form_title: "Form 3",
+        //         form_link: "https://forms.google.com/forms/form3",
+        //         form_id: "form3",
+        //         form_description: "Sample description",
+        //     },
+        // ]);
+        // setClassInfo({
+        //     class_name: "Sample Class",
+        //     description: "This is a sample description for the class.",
+        // });
+        // setLoading(false);
+        // setError(null);
     }, [classId]);
 
     return (

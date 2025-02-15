@@ -10,73 +10,73 @@ const Classes = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // const fetchData = async () => {
-        //     try {
-        //         const response = await fetch("http://localhost:5000/api/classes/my-classes", {
-        //             method: "GET",
-        //             credentials: "include",
-        //         });
-        //         if (!response.ok) throw new Error("Failed to fetch data");
-        //         const result = await response.json();
-        //         setData(result.classes);
-        //     } catch (err) {
-        //         setError(err.message);
-        //     } finally {
-        //         setLoading(false);
-        //     }
-        // };
-        // fetchData();
-        setData([
-            {
-                "class_id": 1,
-                "user_id": 1,
-                "class_name": "AIML a-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.146Z"
-            },{
-                "class_id": 2,
-                "user_id": 1,
-                "class_name": "AIML b-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.14"
-            },{
-                "class_id": 1,
-                "user_id": 1,
-                "class_name": "IT a-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.146Z"
-            },{
-                "class_id": 2,
-                "user_id": 1,
-                "class_name": "IT b-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.14"
-            },{
-                "class_id": 1,
-                "user_id": 1,
-                "class_name": "ECE a-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.146Z"
-            },{
-                "class_id": 2,
-                "user_id": 1,
-                "class_name": "ECE b-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.14"
-            },{
-                "class_id": 1,
-                "user_id": 1,
-                "class_name": "ECE C-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.146Z"
-            },{
-                "class_id": 2,
-                "user_id": 1,
-                "class_name": "b-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.14"
-            }]);
-        setLoading(false);
+        const fetchData = async () => {
+            try {
+                const response = await fetch("http://localhost:5000/api/classes/my-classes", {
+                    method: "GET",
+                    credentials: "include",
+                });
+                if (!response.ok) throw new Error("Failed to fetch data");
+                const result = await response.json();
+                setData(result.classes);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+        // setData([
+        //     {
+        //         "class_id": 1,
+        //         "user_id": 1,
+        //         "class_name": "AIML a-section",
+        //         "schedule": null,
+        //         "created_at": "2025-02-13T12:59:08.146Z"
+        //     },{
+        //         "class_id": 2,
+        //         "user_id": 1,
+        //         "class_name": "AIML b-section",
+        //         "schedule": null,
+        //         "created_at": "2025-02-13T12:59:08.14"
+        //     },{
+        //         "class_id": 1,
+        //         "user_id": 1,
+        //         "class_name": "IT a-section",
+        //         "schedule": null,
+        //         "created_at": "2025-02-13T12:59:08.146Z"
+        //     },{
+        //         "class_id": 2,
+        //         "user_id": 1,
+        //         "class_name": "IT b-section",
+        //         "schedule": null,
+        //         "created_at": "2025-02-13T12:59:08.14"
+        //     },{
+        //         "class_id": 1,
+        //         "user_id": 1,
+        //         "class_name": "ECE a-section",
+        //         "schedule": null,
+        //         "created_at": "2025-02-13T12:59:08.146Z"
+        //     },{
+        //         "class_id": 2,
+        //         "user_id": 1,
+        //         "class_name": "ECE b-section",
+                
+        //         "class_id": 1,
+        //         "user_id": 1,
+        //         "class_name": "ECE C-section",
+        //         "schedule": null,
+        //         "created_at": "2025-02-13T12:59:08.146Z"
+        //     },{
+        //         "class_id": 2,
+        //         "user_id": 1,
+        //         "class_name": "b-section",
+        //         "schedule": null,
+        //         "schedule": null,
+        //         "created_at": "2025-02-13T12:59:08.14"
+        //     },{"created_at": "2025-02-13T12:59:08.14"
+        //     }]);
+        // setLoading(false);
     }, []);
 
     return (
