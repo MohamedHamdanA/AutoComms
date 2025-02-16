@@ -250,7 +250,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, Bell } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const GformDetails = () => {
@@ -362,7 +362,7 @@ const GformDetails = () => {
                                 Total Students: <span className="font-bold">{data.total_students}</span>
                             </p>
                             <p className="text-lg">
-                                Total Responses: <span className="font-bold">{data.responses}</span>
+                                Total Responses: <span className="font-bold">{data.completed_count}</span>
                             </p>
                         </div>
 
@@ -446,6 +446,16 @@ const GformDetails = () => {
             >
                 <span className="text-lg font-medium">Create</span>
                 <Plus size={24} />
+            </motion.button>
+            <motion.button
+                className="fixed z-50 bottom-6 right-6 bg-gray-600 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-purple-700 focus:outline-none transition-transform"
+                style={{ pointerEvents: "auto" }}
+                whileHover={{ scale: 1.0 }}
+                whileTap={{ scale: 1.1 }}
+                onClick={() => navigate(`/classes/googleform/create/${classId}`)}
+            >
+                <span className="text-lg font-medium">Reminder</span>
+                <Bell size={24} />
             </motion.button>
         </div>
     );
