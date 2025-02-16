@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 const Classes = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, ] = useState(null);
+    const [error, setError ] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
