@@ -9,7 +9,7 @@ const router = Router();
 // Faculty Authentication Routes
 router.get('/google', AuthController.googleAuth);
 router.get('/google/callback', AuthController.googleAuthCallback);
-router.post('/signout', validateSession, validateCsrf, AuthController.signout);
+router.post('/signout', AuthController.signout);
 
 // Student Authentication Routes
 router.get('/student/google', StudentAuthController.googleAuth);

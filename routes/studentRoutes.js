@@ -5,6 +5,6 @@ import { validateCsrf } from '../middleware/validateCsrf.js';
 
 const router = express.Router();
 
-router.get('/:studentId/forms', validateSession, validateCsrf, getStudentForms);
+router.get('/:studentId/forms', getStudentForms);
 
 export default router;

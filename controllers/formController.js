@@ -3,6 +3,8 @@ import { google } from 'googleapis';
 import pool from '../config/db.js';
 import { sendEmail } from '../services/emailServices.js';
 import { oauth2Client } from '../config/UserGoogleClient.js';
+import axios from 'axios';
+import { getLinkedSpreadsheetId, fetchSpreadsheetResponses } from '../services/fetchGoogleFornData.js';
 
 /**
  * Create a Google Form record in the database and send notifications to students.
@@ -54,16 +56,6 @@ export async function createGoogleForm(req, res) {
 }
 
 /**
- * Helper function to extract the actual Google Form ID from a form link.
- * Example form link: "https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=sf_link"
- */
-function extractFormId(formLink) {
-  const regex = /\/d\/e\/([^\/]+)/;
-  const match = formLink.match(regex);
-  return match ? match[1] : null;
-}
-
-/**
  * Fetch the responses for a Google Form using the teacher's access token,
  * and compare them with the students enrolled in a given class.
  *
@@ -73,77 +65,35 @@ function extractFormId(formLink) {
 export async function getFormResponses(req, res) {
   const { classId, formId } = req.params;
   const { userId } = req.cookies;
-
-  if (!classId) {
-    return res.status(400).json({ error: "classId parameter is required" });
+  // (Retrieve form record and extract formTitle and formLink from your DB)
+  const formRecord = await pool.query(
+    `SELECT form_title, form_link FROM google_forms WHERE form_id = $1 AND class_id = $2`,
+    [formId, classId]
+  );
+  if (formRecord.rowCount === 0) {
+    return res.status(404).json({ error: "Google Form record not found" });
   }
-  if (!formId) {
-    return res.status(400).json({ error: "formId parameter is required" });
+  const { form_title: formTitle } = formRecord.rows[0];
+
+  // Retrieve teacher's access token from the database.
+  const tokens = await pool.query(`SELECT access_token FROM users WHERE user_id = $1`, [userId]);
+  if (!tokens.rows[0]?.access_token) {
+    return res.status(401).json({ error: 'Unauthorized - No access token' });
+  }
+  const accessToken = tokens.rows[0].access_token;
+
+  // Attempt to get the linked spreadsheet id programmatically.
+  const spreadsheetId = await getLinkedSpreadsheetId(accessToken, formTitle);
+  if (!spreadsheetId) {
+    return res.status(404).json({ error: 'Linked spreadsheet not found. Ensure that form responses are linked to a spreadsheet.' });
   }
 
+  // Fetch responses from the spreadsheet.
   try {
-    // 1. Retrieve the Google Form record from the database to get the form_link.
-    const formRecord = await pool.query(
-      `SELECT form_link FROM google_forms WHERE form_id = $1 AND class_id = $2`,
-      [formId, classId]
-    );
-    if (formRecord.rowCount === 0) {
-      return res.status(404).json({ error: "Google Form record not found" });
-    }
-    const formLink = formRecord.rows[0].form_link;
-    // Extract the actual Google Form ID from the stored link.
-    const actualFormId = extractFormId(formLink);
-    console.log("FormId:",actualFormId);
-    // return res.status(400).json({ error: "Unable to extract Google Form ID from the form link" });
-    if (!actualFormId) {
-      return res.status(400).json({ error: "Unable to extract Google Form ID from the form link" });
-    }
-
-    // 2. Get teacher's access token from the database.
-    const tokens = await pool.query(
-      `SELECT access_token FROM users WHERE user_id = $1`,
-      [userId]
-    );
-    if (!tokens.rows[0]?.access_token) {
-      return res.status(401).json({ error: 'Unauthorized - No access token' });
-    }
-
-    // 3. Set credentials and initialize the Google Forms API client.
-    oauth2Client.setCredentials({ access_token: tokens.rows[0].access_token });
-    const forms = google.forms({ version: 'v1', auth: oauth2Client });
-
-    // 4. Fetch responses from the Google Form using the extracted actualFormId.
-    const response = await forms.forms.responses.list({
-      formId: actualFormId,
-      pageSize: 100,
-    });
-    const responses = response.data.responses || [];
-
-    // 5. Fetch all students enrolled in the specified class.
-    const students = await pool.query(
-      `SELECT s.student_id, s.email 
-       FROM students s
-       JOIN class_students cs ON s.student_id = cs.student_id
-       WHERE cs.class_id = $1;`,
-      [classId]
-    );
-
-    // 6. Compare student emails against the responses.
-    const responseEmails = responses.map(r => r.respondentEmail);
-    const completionStatus = students.rows.map(student => ({
-      student_id: student.student_id,
-      email: student.email,
-      completed: responseEmails.includes(student.email) ? "Yes" : "No"
-    }));
-
-    // 7. Return the compiled response.
-    res.status(200).json({ 
-      total_students: students.rowCount,
-      responses: responses.length,
-      completion_status: completionStatus
-    });
+    const sheetData = await fetchSpreadsheetResponses(accessToken, spreadsheetId);
+    res.status(200).json({ responses: sheetData.values });
   } catch (error) {
-    console.error('Error fetching form responses:', error);
-    res.status(500).json({ error: 'Failed to fetch form responses' });
+    console.error('Error fetching spreadsheet responses:', error);
+    res.status(500).json({ error: 'Failed to fetch spreadsheet responses' });
   }
 }

@@ -99,7 +99,7 @@ const AuthController = {
 
       // ✅ Set secure cookies
       res.cookie('sessionID', sessionID, { httpOnly: true, secure: true, sameSite: 'Strict', maxAge: 24 * 60 * 60 * 1000 });
-      res.cookie('csrfToken', csrfToken, { secure: true, sameSite: 'Strict', maxAge: 30 * 60 * 1000 });
+      res.cookie('csrfToken', csrfToken, { secure: true, sameSite: 'Strict', maxAge: 24 * 60 * 60 * 1000 });
       res.cookie('userId', user.user_id, { httpOnly: true, secure: true, sameSite: 'Strict', maxAge: 24 * 60 * 60 * 1000 });
       
       res.redirect("http://localhost:5173/");
@@ -119,7 +119,6 @@ const AuthController = {
       if (!sessionID) {
         return res.status(401).json({ error: 'No active session found' });
       }
-
       // 🗑️ Delete session from database
       await deleteSession(sessionID);
       
