@@ -35,7 +35,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {  X } from "lucide-react";
+import {  X,ArrowLeft } from "lucide-react";
 
 const ClassCreate = () => {
     const [className, setClassName] = useState("");
@@ -82,7 +82,7 @@ const ClassCreate = () => {
     return (
         <div className="relative w-full min-h-screen overflow-hidden">
             {/* Background */}
-            <div className="fixed inset-0 bg-gradient-to-br from-cyan-950 via-blue-100 to-purple-500">
+            <div className="fixed  inset-0 bg-gradient-to-br from-cyan-950 via-blue-100 to-purple-500">
                 <motion.h1
                     className="absolute inset-0 flex items-center justify-center text-[15vw] font-extrabold text-gray-300 opacity-55 select-none"
                     initial={{ opacity: 0, scale: 0 }}
@@ -92,9 +92,20 @@ const ClassCreate = () => {
                     AutoComms
                 </motion.h1>
             </div>
-
+            <div className="relative mt-7 ml-4 z-10">
+            <motion.button
+                    className="flex rounded-xl  items-center  text-white mb-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate("/classes")}
+                >
+                    <ArrowLeft size={20} className="mr-2" />
+                    Back to Classes
+                </motion.button>
+            </div>
             {/* Main Content Section */}
             <section className="relative mt-7 z-10 flex items-center justify-center min-h-screen p-6">
+            
                 <div className="p-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-xl text-black shadow-lg w-full max-w-lg">
                     <h2 className="text-3xl font-bold mb-6 text-center">Create a New Class</h2>
                     {message && (

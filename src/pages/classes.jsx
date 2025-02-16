@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 const Classes = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError ] = useState(null);
+    const [error,setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -61,10 +61,6 @@ const Classes = () => {
         //         "class_id": 2,
         //         "user_id": 1,
         //         "class_name": "ECE b-section",
-                
-        //         "class_id": 1,
-        //         "user_id": 1,
-        //         "class_name": "ECE C-section",
         //         "schedule": null,
         //         "created_at": "2025-02-13T12:59:08.146Z"
         //     },{
@@ -72,11 +68,9 @@ const Classes = () => {
         //         "user_id": 1,
         //         "class_name": "b-section",
         //         "schedule": null,
-        //         "schedule": null,
         //         "created_at": "2025-02-13T12:59:08.14"
-        //     },{"created_at": "2025-02-13T12:59:08.14"
         //     }]);
-        // setLoading(false);
+        //setLoading(false);
     }, []);
 
     return (
@@ -97,7 +91,7 @@ const Classes = () => {
             </div>
 
             {/* Main Content */}
-            <section className="relative mt-24 z-10 flex flex-col items-center justify-center min-h-screen p-6">
+            <section className="relative mt-18 z-10 flex flex-col items-center justify-center min-h-screen p-6">
                 <div className="p-6 bg-transparent bg-opacity-10 backdrop-blur-lg rounded-xl text-black text-center shadow-lg w-full max-w-4xl">
                     <h2 className="text-3xl font-bold mb-4">Classes</h2>
 
@@ -129,15 +123,15 @@ const Classes = () => {
             </section>
 
             <motion.button
-  className="fixed z-20 top-6 right-6 bg-purple-600 text-white px-4 py-2  md:px-6 md:py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-purple-700 focus:outline-none transition-transform"
-  style={{ pointerEvents: "auto" }}
-  whileHover={{ scale: 1.05 }}
-  whileTap={{ scale: 0.95 }}
-  onClick={() => navigate("/createclass")}
->
-  <span className="text-sm md:text-lg font-medium">Create</span>
-  <Plus size={20} className="md:w-6 md:h-6" />
-</motion.button>
+                className="fixed z-20 top-6 right-6 bg-purple-600 text-white px-4 py-2  md:px-6 md:py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-purple-700 focus:outline-none transition-transform"
+                style={{ pointerEvents: "auto" }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/createclass")}
+            >
+                <span className="text-sm md:text-lg font-medium">Create</span>
+                <Plus size={20} className="md:w-6 md:h-6" />
+            </motion.button>
 
 
         </div>

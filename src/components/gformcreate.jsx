@@ -200,7 +200,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 const Gformcreate = () => {
   // Extract classId from URL params
   const { classId } = useParams();
@@ -209,6 +210,8 @@ const Gformcreate = () => {
   const [formLink, setFormLink] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -252,6 +255,17 @@ const Gformcreate = () => {
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
+      <div className="fixed mt-6 ml-5 z-40">
+            <motion.button
+                    className="flex rounded-xl  items-center  text-white  px-4 py-2 bg-purple-600 hover:bg-purple-700 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate("/classes/:classId")}
+                >
+                    <ArrowLeft size={20} className="mr-2" />
+                    Back to G-form deatils
+                </motion.button>
+        </div>
       {/* Background */}
       <div className="fixed inset-0 w-full h-screen bg-gradient-to-br from-cyan-950 via-blue-100 to-purple-500">
         <motion.h1
@@ -263,9 +277,8 @@ const Gformcreate = () => {
           AutoComms
         </motion.h1>
       </div>
-
       {/* Main Content - Form */}
-      <section className="relative z-10 flex items-center justify-center min-h-screen p-6">
+      <section className="relative mt-4 z-10 flex items-center justify-center min-h-screen p-6">
         <div className="w-full max-w-lg p-8 bg-white backdrop-blur-lg rounded-xl shadow-lg">
           <h2 className="text-3xl font-bold mb-6 text-center text-black">
             Create Google Form
