@@ -4,7 +4,7 @@ import pool from '../config/db.js';
 import { sendEmail } from '../services/emailServices.js';
 import { oauth2Client } from '../config/UserGoogleClient.js';
 import axios from 'axios';
-import { getLinkedSpreadsheetId, fetchSpreadsheetResponses } from '../services/fetchGoogleFornData.js';
+import { getLinkedSpreadsheetId, fetchSpreadsheetResponses } from '../services/fetchGoogleFormData.js';
 
 /**
  * Create a Google Form record in the database and send notifications to students.
@@ -91,7 +91,8 @@ export async function getFormResponses(req, res) {
   // Fetch responses from the spreadsheet.
   try {
     const sheetData = await fetchSpreadsheetResponses(accessToken, spreadsheetId);
-    res.status(200).json({ responses: sheetData.values });
+    console.log("resonse",sheetData);
+    res.status(200).json({ responses: sheetData });
   } catch (error) {
     console.error('Error fetching spreadsheet responses:', error);
     res.status(500).json({ error: 'Failed to fetch spreadsheet responses' });

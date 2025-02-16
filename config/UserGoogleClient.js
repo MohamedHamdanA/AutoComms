@@ -16,7 +16,8 @@ const AUTH_URL = oauth2Client.generateAuthUrl({
     'https://www.googleapis.com/auth/userinfo.profile',    // For login
     'https://www.googleapis.com/auth/userinfo.email',      // For email access
     'https://www.googleapis.com/auth/gmail.send',         // To send emails
-    'https://www.googleapis.com/auth/forms.responses.readonly' // To access form responses
+    'https://www.googleapis.com/auth/spreadsheets.readonly', // To read responses from the linked spreadsheet
+    'https://www.googleapis.com/auth/drive.readonly'         // To search for the linked spreadsheet in Drive
   ],
   prompt: 'consent'
 });

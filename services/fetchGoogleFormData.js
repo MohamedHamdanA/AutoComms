@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-
+import { oauth2Client } from '../config/UserGoogleClient';
 /**
  * Searches for a spreadsheet that is likely linked to the form based on its title.
  *
@@ -9,7 +9,6 @@ import { google } from 'googleapis';
  */
 export async function getLinkedSpreadsheetId(accessToken, formTitle) {
   // Initialize Drive API client with the access token.
-  const oauth2Client = new google.auth.OAuth2();
   oauth2Client.setCredentials({ access_token: accessToken });
   const drive = google.drive({ version: 'v3', auth: oauth2Client });
   
@@ -38,7 +37,6 @@ export async function getLinkedSpreadsheetId(accessToken, formTitle) {
  * @returns {Promise<Object>} - The spreadsheet data.
  */
 export async function fetchSpreadsheetResponses(accessToken, spreadsheetId, range = 'Form responses 1!A:Z') {
-  const oauth2Client = new google.auth.OAuth2();
   oauth2Client.setCredentials({ access_token: accessToken });
   const sheets = google.sheets({ version: 'v4', auth: oauth2Client });
   
