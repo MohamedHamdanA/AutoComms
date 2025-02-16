@@ -227,9 +227,6 @@ const ClassDetail = () => {
                         <h2 className="text-3xl font-bold mb-4 text-center">
                             {classInfo.class_name}
                         </h2>
-                        <p className="text-lg mb-4 text-center">
-                            {classInfo.description || "No description available"}
-                        </p>
                         <h3 className="text-2xl font-semibold mb-2 mx-1">
                             Google Forms
                         </h3>

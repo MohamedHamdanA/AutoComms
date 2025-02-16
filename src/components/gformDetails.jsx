@@ -174,7 +174,7 @@ function GformDetails() {
                                 Total Students: <span className="font-bold">{data.total_students}</span>
                             </p>
                             <p className="text-lg">
-                                Total Responses: <span className="font-bold">{data.responses}</span>
+                                Total Responses: <span className="font-bold">{data.completed_count}</span>
                             </p>
                         </div>
                         <div className="overflow-x-auto">
