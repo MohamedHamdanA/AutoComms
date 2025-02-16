@@ -5,14 +5,25 @@ import { Menu, X, User } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc"; // Google Icon
 
+const checkCookies = () => {
+    return document.cookie.length > 0;
+};
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolling, setScrolling] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check login status
     const [showLoginPopup, setShowLoginPopup] = useState(false);
+      
+    
 
     useEffect(() => {
+        if(checkCookies()){
+            setIsLoggedIn(true);
+        }else{
+            setIsLoggedIn(false);
+        }
         const handleScroll = () => {
             setScrolling(window.scrollY > 50);
         };
@@ -21,9 +32,9 @@ const Navbar = () => {
     }, []);
 
     const handleLogin = () => {
-        window.location.href = "http://localhost:5000/api/auth/google"; // Redirect to Google Auth
         setIsLoggedIn(true);
         setShowLoginPopup(false);
+        window.location.href = "http://localhost:5000/api/auth/google"; // Redirect to Google Auth
     };
 
     const handleLogout = async () => {
@@ -36,9 +47,9 @@ const Navbar = () => {
             if (!response.ok) {
                 throw new Error("Logout failed");
             }
+            setIsLoggedIn(false);
             // After logout, you can either reload the page or navigate to the home/login page.
             window.location.href = "/";
-            setIsLoggedIn(false);
         } catch (error) {
             console.error("Logout error:", error);
         }
@@ -87,8 +98,8 @@ const Navbar = () => {
             <div className="hidden md:flex space-x-6">
                 <Link to="/" className="text-gray-700 font-semibold hover:text-blue-600 transition">Home</Link>
                 <Link to="/classes" className="text-gray-700 font-semibold hover:text-blue-600 transition">Classes</Link>
-                <Link to="/instagram" className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</Link>
                 <Link to="/youtube" className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</Link>
+                <Link to="/instagram" className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</Link>
                 <Link to="/facebook" className="text-gray-700 font-semibold hover:text-blue-600 transition">Facebook</Link>
             </div>
 
