@@ -7,10 +7,12 @@ import Instagram from "./pages/instagram";
 import Facebook from "./pages/facebook";
 import Youtube from "./pages/youtube";
 import Youtubelogin from "./pages/Youtubelogin";
+import InstaLogin from "./pages/InstaLogin";
 import ClassCreate from "./components/classcreate";
 import ClassDetail from "./components/classDetails";
 import Gformcreate from "./components/gformcreate";
 import GformDetails from "./components/gformDetails";
+import FaceLogin from "./pages/FaceLogin";
 
 const App = () => {
   return (
@@ -21,6 +23,8 @@ const App = () => {
         <Route path="/classes" element={<Classes />} />
         <Route path="/instagram" element={<Instagram />} />
         <Route path="/Youtubelogin" element={<Youtubelogin />} />
+        <Route path="/InstaLogin" element={<InstaLogin />} />
+        <Route path="/FaceLogin" element={<FaceLogin />} />
         {/* Added route for the YouTube dashboard */}
         <Route path="/youtube" element={<Youtube />} />
         <Route path="/facebook" element={<Facebook />} />

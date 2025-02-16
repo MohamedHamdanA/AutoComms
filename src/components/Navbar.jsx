@@ -99,8 +99,8 @@ const Navbar = () => {
                 <Link to="/" className="text-gray-700 font-semibold hover:text-blue-600 transition">Home</Link>
                 <Link to="/classes" className="text-gray-700 font-semibold hover:text-blue-600 transition">Classes</Link>
                 <Link to="/Youtubelogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</Link>
-                <Link to="/instagram" className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</Link>
-                <Link to="/facebook" className="text-gray-700 font-semibold hover:text-blue-600 transition">Facebook</Link>
+                <Link to="/InstaLogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</Link>
+                <Link to="/FaceLogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">Facebook</Link>
             </div>
 
             {/* Mobile Menu & User Profile */}
