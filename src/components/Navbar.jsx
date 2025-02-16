@@ -88,7 +88,7 @@ const Navbar = () => {
                 <Link to="/" className="text-gray-700 font-semibold hover:text-blue-600 transition">Home</Link>
                 <Link to="/classes" className="text-gray-700 font-semibold hover:text-blue-600 transition">Classes</Link>
                 <Link to="/instagram" className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</Link>
-                <Link to="/youtube" className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</Link>
+                <Link to="/Youtubelogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</Link>
                 <Link to="/facebook" className="text-gray-700 font-semibold hover:text-blue-600 transition">Facebook</Link>
             </div>
 
@@ -138,7 +138,7 @@ const Navbar = () => {
                         <Link to="/" className="text-gray-700 font-semibold hover:text-blue-600 transition" onClick={() => setIsOpen(false)}>Home</Link>
                         <Link to="/classes" className="text-gray-700 font-semibold hover:text-blue-600 transition" onClick={() => setIsOpen(false)}>Classes</Link>
                         <Link to="/instagram" className="text-gray-700 font-semibold hover:text-blue-600 transition" onClick={() => setIsOpen(false)}>Instagram</Link>
-                        <Link to="/youtube" className="text-gray-700 font-semibold hover:text-blue-600 transition" onClick={() => setIsOpen(false)}>YouTube</Link>
+                        <Link to="/Youtubelogin" className="text-gray-700 font-semibold hover:text-blue-600 transition" onClick={() => setIsOpen(false)}>YouTube</Link>
                         <Link to="/facebook" className="text-gray-700 font-semibold hover:text-blue-600 transition" onClick={() => setIsOpen(false)}>Facebook</Link>
                     </motion.div>
                 )}
