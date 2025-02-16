@@ -91,8 +91,50 @@ export async function getFormResponses(req, res) {
   // Fetch responses from the spreadsheet.
   try {
     const sheetData = await fetchSpreadsheetResponses(accessToken, spreadsheetId);
-    console.log("resonse",sheetData);
-    res.status(200).json({ responses: sheetData });
+    console.log("resonse", sheetData);
+
+    // 1️⃣ Extract response emails dynamically (last column)
+const responseEmails = sheetData.values
+.slice(1) // Skip the header row
+.map(row => row[row.length - 1]) // Get the last element (email)
+.filter(email => email !== undefined); // Remove undefined values
+
+// 2️⃣ Fetch all students enrolled in the specified class
+const students = await pool.query(
+`SELECT s.student_id, s.email 
+ FROM students s
+ JOIN class_students cs ON s.student_id = cs.student_id
+ WHERE cs.class_id = $1;`,
+[classId]
+);
+
+// 3️⃣ Initialize Yes/No counters
+let completedCount = 0;
+let notCompletedCount = 0;
+
+// 4️⃣ Compare student emails against form responses
+const completionStatus = students.rows.map(student => {
+const isCompleted = responseEmails.includes(student.email);
+if (isCompleted) completedCount++;
+else notCompletedCount++;
+
+return {
+  student_id: student.student_id,
+  email: student.email,
+  completed: isCompleted ? "Yes" : "No"
+};
+});
+
+// 5️⃣ Return the response including Yes/No count
+res.status(200).json({ 
+total_students: students.rowCount,
+responses: responseEmails.length,
+completed_count: completedCount,  // ✅ Count of students who completed the form
+not_completed_count: notCompletedCount,  // ✅ Count of students who did not complete the form
+completion_status: completionStatus
+});
+
+
   } catch (error) {
     console.error('Error fetching spreadsheet responses:', error);
     res.status(500).json({ error: 'Failed to fetch spreadsheet responses' });

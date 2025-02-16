@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { oauth2Client } from '../config/UserGoogleClient';
+import { oauth2Client } from '../config/UserGoogleClient.js';
 /**
  * Searches for a spreadsheet that is likely linked to the form based on its title.
  *
