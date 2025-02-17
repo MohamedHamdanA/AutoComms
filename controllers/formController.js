@@ -140,3 +140,50 @@ completion_status: completionStatus
     res.status(500).json({ error: 'Failed to fetch spreadsheet responses' });
   }
 }
+
+export async function sendReminderEmails(req, res) {
+    const { classId, formId } = req.params;
+    const { userId } = req.cookies; // Teacher's ID
+    const { emails } = req.body; // ✅ Get non-filled student emails from frontend
+
+    if (!emails || emails.length === 0) {
+        return res.status(400).json({ error: "No emails provided for reminders." });
+    }
+
+    try {
+        // Fetch form details
+        const formRecord = await pool.query(
+            `SELECT form_title, form_link FROM google_forms WHERE form_id = $1 AND class_id = $2`,
+            [formId, classId]
+        );
+
+        if (formRecord.rowCount === 0) {
+            return res.status(404).json({ error: "Google Form not found" });
+        }
+
+        const { form_title: formTitle, form_link: formLink } = formRecord.rows[0];
+
+        // Email content
+        const subject = `Reminder: Please Complete the Google Form "${formTitle}"`;
+        const body = `
+            <p>Hello,</p>
+            <p>This is a reminder to complete the Google Form:</p>
+            <p><strong>${formTitle}</strong></p>
+            <p><a href="${formLink}">Click here to fill out the form</a></p>
+            <p>Please submit your response as soon as possible.</p>
+            <p>Thank you!</p>
+        `;
+
+        // Send emails
+        for (const email of emails) {
+            await sendEmail(userId, email, subject, body);
+        }
+
+        res.status(200).json({ message: `Reminder emails sent to ${emails.length} students.` });
+
+    } catch (error) {
+        console.error('Error sending reminders:', error);
+        res.status(500).json({ error: "Failed to send reminder emails" });
+    }
+}
+
