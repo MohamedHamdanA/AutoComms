@@ -9,8 +9,8 @@ import { getLinkedSpreadsheetId, fetchSpreadsheetResponses } from '../services/f
  * Expected endpoint: GET /api/student/forms-not-filled
  */
 export async function getStudentFormsNotFilled(req, res) {
-  const { userId } = req.cookies; // Student's ID
-
+  const { studentId } = req.cookies; // Student's ID
+  const userId = studentId;
   try {
     // 1. Get the student's email from the DB.
     const studentResult = await pool.query(
