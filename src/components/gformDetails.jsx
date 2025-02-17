@@ -325,6 +325,38 @@ const GformDetails = () => {
         { name: "No", value: noCount },
     ];
 
+    const handleSendReminder = async () => {
+        if (!data || !data.completion_status) {
+            alert("No data available to send reminders.");
+            return;
+        }
+    
+        // ✅ Extract emails of students who haven't completed the form
+        const nonFilledStudents = data.completion_status
+            .filter(student => student.completed === "No") // Get only those who haven't filled
+            .map(student => student.email); // Extract emails
+    
+        if (nonFilledStudents.length === 0) {
+            alert("All students have already completed the form.");
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:5000/api/google-form/reminder/${classId}/${formId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ emails: nonFilledStudents }) // ✅ Send email list to backend
+            });
+    
+            const result = await response.json();
+            alert(result.message); // Show confirmation
+        } catch (error) {
+            console.error("Error sending reminder:", error);
+            alert("Failed to send reminder.");
+        }
+    };    
+
     return (
         <div className="fixed inset-0 w-full h-screen bg-gradient-to-br from-cyan-950 via-blue-100 to-purple-500 overflow-auto">
             {/* Background "AutoComms" Text */}
@@ -452,11 +484,12 @@ const GformDetails = () => {
                 style={{ pointerEvents: "auto" }}
                 whileHover={{ scale: 1.0 }}
                 whileTap={{ scale: 1.1 }}
-                onClick={() => navigate(`/classes/googleform/create/${classId}`)}
+                onClick={handleSendReminder} // ✅ Calls the reminder API
             >
                 <span className="text-lg font-medium">Reminder</span>
                 <Bell size={24} />
             </motion.button>
+
         </div>
     );
 };

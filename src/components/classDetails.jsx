@@ -280,7 +280,17 @@ const ClassDetail = () => {
                 whileTap={{ scale: 1.1 }}
                 onClick={() => navigate(`/classes/googleform/create/${classId}`)}
             >
-                <span className="text-lg font-medium">Create</span>
+                <span className="text-lg font-medium">Create Form</span>
+                <Plus size={24} />
+            </motion.button>
+            <motion.button
+                className="fixed z-50 top-22 right-6 bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-purple-700 focus:outline-none transition-transform"
+                style={{ pointerEvents: "auto" }}
+                whileHover={{ scale: 1.0 }}
+                whileTap={{ scale: 1.1 }}
+                onClick={() => navigate(`/classes/googleform/Announcement/${classId}`)}
+            >
+                <span className="text-lg font-medium">Announcement</span>
                 <Plus size={24} />
             </motion.button>
         </div>
