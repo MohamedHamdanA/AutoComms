@@ -34,7 +34,7 @@ const Gformcreate = () => {
       });
       const result = await response.json();
       if (response.ok) {
-        setMessage("Google Form created successfully!");
+        setMessage("Announcement Sent Successfully!");
         // Optionally, you can redirect or clear the form here
       } else {
         setMessage(result.error || "Failed to create form.");
@@ -81,7 +81,7 @@ const Gformcreate = () => {
           {message && (
             <p
               className={`text-center mb-4 ${
-                message.includes("success") ? "text-green-500" : "text-red-500"
+                message.includes("successfully") ? "text-green-500" : "text-red-500"
               }`}
             >
               {message}
