@@ -1,7 +1,7 @@
 import pool from '../config/db.js';
 import { oauth2Client, AUTH_URL } from '../config/studentGoogleClient.js';
 import { randomBytes } from 'crypto';
-import { storeSession, deleteSession } from './sessionService.js';
+import { storeSession, deleteSession } from './stuSessionService.js';
 import { google } from 'googleapis';
 
 function generateRandomToken() {
@@ -65,16 +65,17 @@ const StudentAuthController = {
         maxAge: 24 * 60 * 60 * 1000,
       };
 
-      res.cookie('sessionID', sessionID, cookieOptions);
-      res.cookie('csrfToken', csrfToken, { ...cookieOptions, maxAge: 30 * 60 * 1000 });
+      res.cookie('studentSessionID', sessionID, cookieOptions);
+      res.cookie('studentCsrfToken', csrfToken, { ...cookieOptions, maxAge: 30 * 60 * 1000 });
       res.cookie('studentId', student.student_id, cookieOptions);
 
+
+      console.log("student cookies setted");
       // Return JSON response for the extension to handle.
-      // res.status(200).json({
-      //   message: 'Login Successful',
-      //   student: { name: student.name, email: student.email }
-      // });
-      res.redirect("chrome-extension://mnjhahpifkplaaeedlnbiomkjfngjlkk");
+      res.status(200).json({
+        message: 'Login Successful',
+        student: { name: student.name, email: student.email }
+      });
     } catch (error) {
       console.error('Google login error:', error);
       res.status(500).json({ error: 'Google login failed. Please try again.' });
@@ -86,14 +87,15 @@ const StudentAuthController = {
    */
   signout: async (req, res) => {
     try {
-      const sessionID = req.cookies.sessionID;
+      const sessionID = req.cookies.studentSessionID;
       if (!sessionID) {
         return res.status(401).json({ error: 'No active session found' });
       }
       await deleteSession(sessionID);
-      res.clearCookie('sessionID');
-      res.clearCookie('csrfToken');
+      res.clearCookie('studentSessionID');
+      res.clearCookie('studentCsrfToken');
       res.clearCookie('studentId');
+
       res.status(200).json({ message: 'Signout successful' });
     } catch (error) {
       console.error('Signout error:', error);
