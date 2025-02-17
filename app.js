@@ -5,7 +5,8 @@ import authRoutes from './routes/authRoutes.js';
 import createTables from './models/setup.js';                      // Ensure tables are created before anything else
 import classRoutes from './routes/classRoutes.js';
 import formRoutes from './routes/formRoutes.js';
-import studentRoutes from './routes/studentRoutes.js'
+import studentRoutes from './routes/studentRoutes.js';
+import announcementRoutes from './routes/announcementRoutes.js';
 import cors from 'cors';
 
 createTables();
@@ -47,5 +48,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/classes',classRoutes);
 app.use('/api/google-form', formRoutes);
 app.use('/api/student', studentRoutes);
+app.use('/api/Announcement', announcementRoutes)
 
 export default app;
