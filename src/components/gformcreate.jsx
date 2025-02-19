@@ -278,11 +278,21 @@ const Gformcreate = () => {
         </motion.h1>
       </div>
       {/* Main Content - Form */}
-      <section className="relative mt-4 z-10 flex items-center justify-center min-h-screen p-6">
-        <div className="w-full max-w-lg p-8 bg-white backdrop-blur-lg rounded-xl shadow-lg">
+      <section className="relative mt-20  z-10 flex items-center justify-center min-h-screen p-6">
+        <div className="w-full  max-w-lg p-8 bg-white backdrop-blur-lg rounded-xl shadow-lg">
           <h2 className="text-3xl font-bold mb-6 text-center text-black">
             Create Google Form
           </h2>
+          <p className="text-red-500">
+            Note :
+          </p>
+          <p className="text-red-500 px-8">
+          * This form title and original form title should be same
+          </p>
+          <p className="text-red-500 px-8">
+          * This created form link should be same email with the logged in email
+          </p>
+          <br></br>
           {message && (
             <p
               className={`text-center mb-4 ${

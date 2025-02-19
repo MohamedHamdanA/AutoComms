@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
-// Chart.js imports
+import { useNavigate } from "react-router-dom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,12 +27,15 @@ ChartJS.register(
 );
 
 // Reusable component for the three circular buttons
-const ThreeButtons = () => (
+const ThreeButtons = () => {
+  const navigate = useNavigate();
+return (
   <>
     {/* Upload Video */}
     <button
       className="w-12 h-12 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 shadow-sm flex items-center justify-center"
       aria-label="Upload Video"
+      onClick={() => navigate("/youtube/ytupload")}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -105,6 +107,7 @@ const ThreeButtons = () => (
     </button>
   </>
 );
+};
 
 const Youtube = () => {
   const [channelData, setChannelData] = useState(null);
@@ -124,7 +127,7 @@ const Youtube = () => {
 
   // Dummy data for the chart (replace with real data)
   const chartLabels = [
-    "Day 1", "Day 2", "Day 3", "Day 4", "Day 5", 
+    "Day 1", "Day 2", "Day 3", "Day 4", "Day 5",
     "Day 6", "Day 7", "Day 8", "Day 9", "Day 10",
     "Day 11", "Day 12", "Day 13", "Day 14", "Day 15",
     "Day 16", "Day 17", "Day 18", "Day 19", "Day 20",
@@ -188,7 +191,7 @@ const Youtube = () => {
         <div className="p-6 bg-white bg-opacity-20 backdrop-blur-lg rounded-xl text-black text-center shadow-lg w-full max-w-[1200px]">
           {/* Outer container: stack vertically on small screens, row on md+ */}
           <div className="flex flex-col md:flex-row items-start border border-gray-300 rounded-lg p-5 gap-6">
-            
+
             {/* Profile Section */}
             <div className="w-full md:w-[30%] flex flex-col items-center text-center">
               {/* On SMALL screens: show buttons at the top right of the Profile section */}
@@ -229,7 +232,7 @@ const Youtube = () => {
 
             {/* Divider for large screens */}
             <div className="hidden md:block border-l border-gray-300 h-120"></div>
-            
+
             {/* Latest Video (Performance) Section */}
             <div className="w-full md:w-[35%] flex flex-col gap-4">
               <h2 className="text-2xl font-bold text-left">Channel Dashboard</h2>
@@ -281,7 +284,7 @@ const Youtube = () => {
               <div className="hidden md:flex items-center justify-end gap-4 w-full">
                 <ThreeButtons />
               </div>
-              
+
               {/* Analytics Graph */}
               <div className="mt-2 w-full p-4 bg-white bg-opacity-80 rounded-lg shadow-sm">
                 <h3 className="text-md font-bold mb-2 text-gray-700">Analytics Graph</h3>
@@ -289,7 +292,7 @@ const Youtube = () => {
                   <Line data={chartData} options={chartOptions} />
                 </div>
               </div>
-              
+
               {/* Analytics Cards */}
               <div className="flex flex-wrap gap-6">
                 <div className="p-3 border border-gray-300 rounded-lg w-[140px] flex flex-col items-center">

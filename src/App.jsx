@@ -13,7 +13,7 @@ import Gformcreate from "./components/gformcreate";
 import Announcement from "./components/Announcement";
 import GformDetails from "./components/gformDetails";
 import FaceLogin from "./pages/FaceLogin";
-
+import Ytupload from "./components/ytupload";
 const App = () => {
   return (
     <Router>
@@ -33,6 +33,7 @@ const App = () => {
         <Route path="/classes/googleform/:classId/:formId" element={<GformDetails />} />
         <Route path="/classes/googleform/create/:classId" element={<Gformcreate />} />
         <Route path="/classes/googleform/Announcement/:classId" element={<Announcement />} />
+        <Route path="/youtube/ytupload" element={<Ytupload/>}/>
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </Router>
