@@ -77,6 +77,20 @@ const createTables = async () => {
       );
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS youtube_videos (
+        id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        video_path TEXT NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        privacy_status TEXT DEFAULT 'private',
+        scheduled_time TIMESTAMP NOT NULL,
+        uploaded BOOLEAN DEFAULT FALSE,
+        youtube_video_id TEXT
+      );
+    `);
+
     console.log("✅ Tables created successfully.");
   } catch (err) {
     console.error("❌ Error creating tables:", err);
