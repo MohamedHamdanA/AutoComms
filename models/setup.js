@@ -71,7 +71,7 @@ const createTables = async () => {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS stusessions (
         session_id VARCHAR(255) PRIMARY KEY,
-        student_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        student_id INT REFERENCES students(student_id) ON DELETE CASCADE,
         csrf_token VARCHAR(255) NOT NULL,
         expires_at TIMESTAMP NOT NULL
       );

@@ -1,6 +1,6 @@
 import pool from '../config/db.js';
 import { getLinkedSpreadsheetId, fetchSpreadsheetResponses } from '../services/fetchGoogleFormData.js';
-
+import { getUserIDFromSession } from './stuSessionService.js';
 /**
  * Fetch all forms assigned to the student and determine, for each, whether the student has filled it.
  * For each form, the teacher’s access token (from the user record associated with the class) 
@@ -9,10 +9,16 @@ import { getLinkedSpreadsheetId, fetchSpreadsheetResponses } from '../services/f
  * Expected endpoint: GET /api/student/forms-not-filled
  */
 export async function getStudentFormsNotFilled(req, res) {
-  const { studentId } = req.cookies; // Student's ID
-  const userId = 1;
+  const { studentSessionID } = req.cookies; // Student's ID
+  if(!studentSessionID){
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
+    const userId = await getUserIDFromSession(studentSessionID);
     // 1. Get the student's email from the DB.
+    if(!userId){
+      throw new Error("User Not Logged In");
+    }
     const studentResult = await pool.query(
       `SELECT email FROM students WHERE student_id = $1`,
       [userId]

@@ -96,7 +96,7 @@ export async function getFormResponses(req, res) {
     // 1️⃣ Extract response emails dynamically (last column)
 const responseEmails = sheetData.values
 .slice(1) // Skip the header row
-.map(row => row[row.length - 1]) // Get the last element (email)
+.map(row => row[1]) // Get the last element (email)
 .filter(email => email !== undefined); // Remove undefined values
 
 // 2️⃣ Fetch all students enrolled in the specified class
@@ -187,3 +187,43 @@ export async function sendReminderEmails(req, res) {
     }
 }
 
+/**
+ * Deletes a Google Form record.
+ * Only the teacher who owns the class associated with the form can delete it.
+ * This function uses a transaction to ensure atomicity.
+ *
+ * Expected endpoint: DELETE /api/google-form/:formId
+ */
+export async function deleteGoogleForm(req, res) {
+  const { formId } = req.params;
+  const userId = req.cookies.userId; // Teacher's ID
+
+  try {
+
+    // Verify that the form exists and that the teacher owns it.
+    const result = await pool.query(
+      `SELECT gf.form_id 
+       FROM google_forms gf 
+       JOIN classes c ON gf.class_id = c.class_id
+       WHERE gf.form_id = $1 AND c.user_id = $2`,
+      [formId, userId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Form not found or unauthorized" });
+    }
+    // Start transaction
+    await pool.query("BEGIN");
+    // Delete the form record.
+    await pool.query("DELETE FROM google_forms WHERE form_id = $1", [formId]);
+
+    // Commit the transaction.
+    await pool.query("COMMIT");
+    res.status(200).json({ message: "Google form deleted successfully" });
+  } catch (error) {
+    // Rollback the transaction in case of error.
+    await pool.query("ROLLBACK");
+    console.error("Error deleting google form:", error);
+    res.status(500).json({ error: "Server error while deleting google form" });
+  }
+}

@@ -5,7 +5,7 @@ import multer from "multer";
 const storage = multer.memoryStorage(); // Store files in memory as buffers
 const upload = multer({ storage });
 
-import { getClassesForUser, createClass, getClassWithForms } from "../controllers/classController.js";
+import { getClassesForUser, createClass, getClassWithForms, deleteClass } from "../controllers/classController.js";
 
 // Get all classes for the authenticated User
 router.get("/my-classes",  getClassesForUser);
@@ -17,5 +17,5 @@ router.post("/", upload.single("file"), createClass);
 
 // Get a class (with its associated Google Forms)
 router.get("/:classId", getClassWithForms);
-
+router.delete("/delete/:classId", deleteClass);
 export default router;

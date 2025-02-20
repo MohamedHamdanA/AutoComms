@@ -9,12 +9,13 @@ import studentRoutes from './routes/studentRoutes.js';
 import announcementRoutes from './routes/announcementRoutes.js';
 import youtubeRoutes from "./routes/youtubeRoutes.js";
 import cors from 'cors';
-
+import path from 'path';
 createTables();
 config();
 
 
 const app = express();
+app.use(express.static('public'));
 
 // Adjust these origins as needed:
 const allowedOrigins = [
@@ -52,5 +53,9 @@ app.use('/api/student', studentRoutes);
 app.use('/api/Announcement', announcementRoutes);
 app.use('/api/youtube', youtubeRoutes);
 
+
+app.get('/close-window.html', (req, res) => {
+  res.sendFile(path.join(__dirname, './public', 'close-window.html'));
+});
 
 export default app;
