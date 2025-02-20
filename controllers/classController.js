@@ -117,3 +117,33 @@ export async function getClassWithForms(req, res) {
     res.status(500).json({ error: "Server error while retrieving class data" });
   }
 }
+
+export async function deleteClass(req, res) {
+  const { classId } = req.params;
+  const userId = req.cookies.userId; // Teacher's ID
+  try {
+    // Verify that the class exists and belongs to the logged-in teacher.
+    const classResult = await pool.query(
+      "SELECT * FROM classes WHERE class_id = $1 AND user_id = $2",
+      [classId, userId]
+    );
+
+    if (classResult.rowCount === 0) {
+      return res.status(404).json({ error: "Class not found or unauthorized" });
+    }
+
+    // Begin a transaction.
+    await pool.query("BEGIN");
+
+    // Delete the class. Foreign key constraints with ON DELETE CASCADE will delete related records.
+    await pool.query("DELETE FROM classes WHERE class_id = $1", [classId]);
+
+    await pool.query("COMMIT");
+
+    res.status(200).json({ message: "Class deleted successfully" });
+  } catch (error) {
+    await pool.query("ROLLBACK");
+    console.error("Error deleting class:", error);
+    res.status(500).json({ error: "Server error while deleting class" });
+  }
+}

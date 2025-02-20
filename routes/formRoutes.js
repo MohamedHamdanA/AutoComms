@@ -2,7 +2,7 @@
 import express from 'express';
 import { validateSession } from '../middleware/validateSession.js';
 import { validateCsrf } from '../middleware/validateCsrf.js';
-import { createGoogleForm, getFormResponses, sendReminderEmails } from '../controllers/formController.js';
+import { createGoogleForm, getFormResponses, sendReminderEmails, deleteGoogleForm } from '../controllers/formController.js';
 
 const router = express.Router();
 
@@ -13,6 +13,6 @@ router.post('/create', createGoogleForm);
 router.get('/responses/:classId/:formId', getFormResponses);
 
 router.post('/reminder/:classId/:formId', sendReminderEmails);
-
+router.delete('/delete/:formId', deleteGoogleForm);
 export default router;
 
