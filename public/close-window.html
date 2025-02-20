@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login Success</title>
+</head>
+<body>
+  <h1>Login Sccessfull!</h1>
+  <h2>You can close this window</h2>
+  <script>
+    (function() {
+      // Utility to get query parameters
+      function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+      }
+      const sessionID = getQueryParam("sessionID");
+      const csrfToken = getQueryParam("csrfToken");
+      const studentId = getQueryParam("studentId");
+
+      if (sessionID && csrfToken && studentId) {
+        // Send session data to the extension
+        chrome.runtime.sendMessage({
+          action: "storeSession",
+          sessionID,
+          csrfToken,
+          studentId
+        }, (response) => {
+          console.log("Session data sent to extension:", response);
+          // Close the window after a short delay
+          setTimeout(() => window.close(), 1000);
+        });
+      } else {
+        console.error("Missing session data in query parameters");
+      }
+    })();
+  </script>
+</body>
+</html>

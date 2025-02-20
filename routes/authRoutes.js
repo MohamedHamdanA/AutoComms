@@ -14,6 +14,6 @@ router.post('/signout', AuthController.signout);
 // Student Authentication Routes
 router.get('/student/google', StudentAuthController.googleAuth);
 router.get('/student/google/callback', StudentAuthController.googleAuthCallback);
-router.post('/student/signout', validateSession, validateCsrf, StudentAuthController.signout);
+router.post('/student/signout', StudentAuthController.signout);
 
 export default router;
