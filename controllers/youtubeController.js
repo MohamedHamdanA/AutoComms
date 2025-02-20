@@ -66,30 +66,37 @@ export const scheduleVideoUpload = async (req, res) => {
     if (!userId) return res.status(401).json({ error: "User not authenticated" });
 
     try {
-        // ✅ Store video details in `youtube_videos` table
+        // ✅ Fetch user's linked YouTube email
+        const userAccount = await pool.query(
+            `SELECT email FROM users WHERE user_id = $1 LIMIT 1`,
+            [userId]
+        );
+
+        if (userAccount.rowCount === 0) {
+            return res.status(400).json({ error: "No linked YouTube account found" });
+        }
+
+        const youtubeEmail = userAccount.rows[0].email;
+
+        // ✅ Save video details in `youtube_videos` table
         const result = await pool.query(
-            `INSERT INTO youtube_videos (user_id, video_path, title, description, privacy_status, scheduled_time)
-             VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`,
-            [userId, videoPath, title, description, privacyStatus, scheduledTime]
+            `INSERT INTO youtube_videos (user_id, youtube_email, video_path, title, description, privacy_status, scheduled_time)
+             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`,
+            [userId, youtubeEmail, videoPath, title, description, "public", scheduledTime]
         );
 
         const videoId = result.rows[0].id;
 
-        // ✅ Schedule Upload
+        // ✅ Schedule Video Upload
         schedule.scheduleJob(new Date(scheduledTime), async () => {
-            const youtubeVideoId = await uploadToYouTube(videoPath, title, description, privacyStatus, userId);
-            if (youtubeVideoId) {
-                await pool.query(
-                    `UPDATE youtube_videos SET uploaded = TRUE, youtube_video_id = $1 WHERE id = $2`,
-                    [youtubeVideoId, videoId]
-                );
-                console.log(`📅 Scheduled Video Uploaded: ${youtubeVideoId}`);
-            }
+            const uploadedVideoId = await uploadToYouTube(videoPath, title, description, privacyStatus, userId, youtubeEmail);
+            await pool.query(`UPDATE youtube_videos SET uploaded = TRUE, youtube_video_id = $1 WHERE id = $2`, [uploadedVideoId, videoId]);
         });
 
-        res.status(200).json({ message: "✅ Video scheduled successfully!" });
+        res.status(200).json({ message: "Video scheduled for upload" });
     } catch (error) {
         console.error("❌ Scheduling Error:", error);
         res.status(500).json({ error: "Failed to schedule video upload" });
     }
 };
+
