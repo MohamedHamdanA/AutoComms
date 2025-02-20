@@ -154,67 +154,67 @@ const Classes = () => {
 
   // Fetch classes when component mounts
   useEffect(() => {
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await fetch("http://localhost:5000/api/classes/my-classes", {
-    //       method: "GET",
-    //       credentials: "include",
-    //     });
-    //     if (!response.ok) throw new Error("Failed to fetch data");
-    //     const result = await response.json();
-    //     setData(result.classes);
-    //   } catch (err) {
-    //     setError(err.message);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-    // fetchData();
-    setData([
-            {
-                "class_id": 1,
-                "user_id": 1,
-                "class_name": "AIML a-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.146Z"
-            },{
-                "class_id": 2,
-                "user_id": 1,
-                "class_name": "AIML b-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.14"
-            },{
-                "class_id": 1,
-                "user_id": 1,
-                "class_name": "IT a-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.146Z"
-            },{
-                "class_id": 2,
-                "user_id": 1,
-                "class_name": "IT b-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.14"
-            },{
-                "class_id": 1,
-                "user_id": 1,
-                "class_name": "ECE a-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.146Z"
-            },{
-                "class_id": 2,
-                "user_id": 1,
-                "class_name": "ECE b-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.146Z"
-            },{
-                "class_id": 2,
-                "user_id": 1,
-                "class_name": "b-section",
-                "schedule": null,
-                "created_at": "2025-02-13T12:59:08.14"
-            }]);
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/classes/my-classes", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) throw new Error("Failed to fetch data");
+        const result = await response.json();
+        setData(result.classes);
+      } catch (err) {
+        setError(err.message);
+      } finally {
         setLoading(false);
+      }
+    };
+    fetchData();
+    // setData([
+    //         {
+    //             "class_id": 1,
+    //             "user_id": 1,
+    //             "class_name": "AIML a-section",
+    //             "schedule": null,
+    //             "created_at": "2025-02-13T12:59:08.146Z"
+    //         },{
+    //             "class_id": 2,
+    //             "user_id": 1,
+    //             "class_name": "AIML b-section",
+    //             "schedule": null,
+    //             "created_at": "2025-02-13T12:59:08.14"
+    //         },{
+    //             "class_id": 1,
+    //             "user_id": 1,
+    //             "class_name": "IT a-section",
+    //             "schedule": null,
+    //             "created_at": "2025-02-13T12:59:08.146Z"
+    //         },{
+    //             "class_id": 2,
+    //             "user_id": 1,
+    //             "class_name": "IT b-section",
+    //             "schedule": null,
+    //             "created_at": "2025-02-13T12:59:08.14"
+    //         },{
+    //             "class_id": 1,
+    //             "user_id": 1,
+    //             "class_name": "ECE a-section",
+    //             "schedule": null,
+    //             "created_at": "2025-02-13T12:59:08.146Z"
+    //         },{
+    //             "class_id": 2,
+    //             "user_id": 1,
+    //             "class_name": "ECE b-section",
+    //             "schedule": null,
+    //             "created_at": "2025-02-13T12:59:08.146Z"
+    //         },{
+    //             "class_id": 2,
+    //             "user_id": 1,
+    //             "class_name": "b-section",
+    //             "schedule": null,
+    //             "created_at": "2025-02-13T12:59:08.14"
+    //         }]);
+    //     setLoading(false);
   }, []);
 
   // Delete a class and update state
@@ -251,15 +251,15 @@ const Classes = () => {
         </motion.h1>
       </div>
 
-      {/* Edit Mode Toggle Button */}
+      {/* Edit Mode Toggle Button
       <div className="absolute top-4 left-4 z-30">
         <button
-          className="bg-blue-500 text-white px-3 py-1 rounded"
+          className="bg-purple-500 text-white px-3 py-1 rounded"
           onClick={() => setEditMode((prev) => !prev)}
         >
           {editMode ? "Exit Edit Mode" : "Edit"}
         </button>
-      </div>
+      </div> */}
 
       {/* Main Content */}
       <section className="relative mt-18 z-10 flex flex-col items-center justify-center min-h-screen p-6">
@@ -269,6 +269,14 @@ const Classes = () => {
           {/* Fetch Status */}
           {loading && <p className="text-gray-700">Loading...◌</p>}
           {error && <p className="text-red-500">{error}</p>}
+        <div className="absolute top-4 right-4 z-30">
+        <button
+          className="bg-purple-500 text-white px-3 py-1 rounded"
+          onClick={() => setEditMode((prev) => !prev)}
+        >
+          {editMode ? "Exit Edit Mode" : "Edit"}
+        </button>
+        </div>
 
           {/* Class List */}
           {!loading && !error && (
@@ -284,6 +292,7 @@ const Classes = () => {
                     if (!editMode) navigate(`/classes/${item.class_id}`);
                   }}
                 >
+                  
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-black">
                       {item.class_name}
@@ -306,6 +315,7 @@ const Classes = () => {
             </div>
           )}
         </div>
+        
       </section>
 
       <motion.button
