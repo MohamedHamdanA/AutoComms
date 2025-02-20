@@ -34,6 +34,14 @@ const Navbar = () => {
         window.location.href = "http://localhost:5000/api/auth/google"; // Redirect to Google Auth
     };
 
+    const handleProtectedNavigation = (event,path) => {
+        if (!isLoggedIn) {
+            event.preventDefault();
+            setShowLoginPopup(true);
+            console.log(path);
+        }
+    };
+
     const handleLogout = async () => {
         try {
             // Call your signout endpoint; adjust method/headers as needed
@@ -94,10 +102,10 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex space-x-6">
                 <Link to="/" className="text-gray-700 font-semibold hover:text-blue-600 transition">Home</Link>
-                <Link to="/classes" className="text-gray-700 font-semibold hover:text-blue-600 transition">Classes</Link>
-                <Link to="/youtube" className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</Link>
-                <Link to="/InstaLogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</Link>
-                <Link to="/FaceLogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">Facebook</Link>
+                <Link to="/classes"  onClick={(e) => handleProtectedNavigation(e, '/classes')} className="text-gray-700 font-semibold hover:text-blue-600 transition">Classes</Link>
+                <Link to="/youtube" onClick={(e) => handleProtectedNavigation(e, '/youtube')} className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</Link>
+                <Link to="/InstaLogin" onClick={(e) => handleProtectedNavigation(e, '/InstaLogin')} className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</Link>
+                <Link to="/FaceLogin" onClick={(e) => handleProtectedNavigation(e, '/FaceLogin')} className="text-gray-700 font-semibold hover:text-blue-600 transition">Facebook</Link>
             </div>
 
             {/* Mobile Menu & User Profile */}
@@ -133,6 +141,7 @@ const Navbar = () => {
                     )}
                 </AnimatePresence>
             </div>
+            
 
             {/* Mobile Menu */}
             <AnimatePresence>
@@ -195,3 +204,133 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+// import { useState, useEffect } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { Menu, X, User } from "lucide-react";
+// import { Link, NavLink, useNavigate } from "react-router-dom";
+// import { FcGoogle } from "react-icons/fc";
+
+// const checkCookies = () => {
+//     return document.cookie.length > 0;
+// };
+
+// const Navbar = () => {
+//     const [isOpen, setIsOpen] = useState(false);
+//     const [scrolling, setScrolling] = useState(false);
+//     const [userMenuOpen, setUserMenuOpen] = useState(false);
+//     const [isLoggedIn, setIsLoggedIn] = useState(false);
+//     const [showLoginPopup, setShowLoginPopup] = useState(false);
+//     const navigate = useNavigate();
+
+//     useEffect(() => {
+//         if (checkCookies()) {
+//             setIsLoggedIn(true);
+//         } else {
+//             setIsLoggedIn(false);
+//         }
+//         const handleScroll = () => {
+//             setScrolling(window.scrollY > 50);
+//         };
+//         window.addEventListener("scroll", handleScroll);
+//         return () => window.removeEventListener("scroll", handleScroll);
+//     }, []);
+
+//     const handleLogin = () => {
+//         setIsLoggedIn(true);
+//         setShowLoginPopup(false);
+//         window.location.href = "http://localhost:5000/api/auth/google";
+//     };
+
+//     const handleLogout = async () => {
+//         try {
+//             const response = await fetch("http://localhost:5000/api/auth/signout", {
+//                 method: "POST",
+//                 credentials: "include",
+//             });
+//             if (!response.ok) {
+//                 throw new Error("Logout failed");
+//             }
+//             setIsLoggedIn(false);
+//             window.location.href = "/";
+//         } catch (error) {
+//             console.error("Logout error:", error);
+//         }
+//     };
+
+//     const handleProtectedNavigation = (path) => {
+//         if (isLoggedIn) {
+//             navigate(path);
+//         } else {
+//             setShowLoginPopup(true);
+//         }
+//     };
+
+//     return (
+//         <motion.nav
+//             initial={{ y: -50, opacity: 0 }}
+//             animate={{ y: 0, opacity: 1 }}
+//             transition={{ duration: 0.5 }}
+//             className={`fixed top-4 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-2xl px-6 py-3 flex items-center justify-between w-[90%] md:w-[60%] z-50 backdrop-blur-lg bg-opacity-80 transition-all duration-300 ${scrolling ? 'top-2 shadow-xl bg-opacity-90' : ''}`}
+//         >
+//             <div className="text-xl font-bold text-gray-800">
+//                 <NavLink to="/" className="transition">AutoComms</NavLink>
+//             </div>
+
+//             <div className="hidden md:flex space-x-6">
+//                 <Link to="/" className="text-gray-700 font-semibold hover:text-blue-600 transition">Home</Link>
+//                 <button onClick={() => handleProtectedNavigation("/classes")} className="text-gray-700 font-semibold hover:text-blue-600 transition">Classes</button>
+//                 <button onClick={() => handleProtectedNavigation("/youtube")} className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</button>
+//                 <button onClick={() => handleProtectedNavigation("/InstaLogin")} className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</button>
+//                 <button onClick={() => handleProtectedNavigation("/FaceLogin")} className="text-gray-700 font-semibold hover:text-blue-600 transition">Facebook</button>
+//             </div>
+
+//             <div className="flex items-center space-x-4 relative">
+//                 <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+//                     {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+//                 </button>
+
+//                 <button onClick={() => setUserMenuOpen(!userMenuOpen)}>
+//                     <User className="w-6 h-6 text-gray-700 hover:text-blue-600 transition" />
+//                 </button>
+//             </div>
+
+//             <AnimatePresence>
+//                 {showLoginPopup && (
+//                     <motion.div
+//                         initial={{ opacity: 0, scale: 0.8 }}
+//                         animate={{ opacity: 1, scale: 1 }}
+//                         exit={{ opacity: 0, scale: 0.8 }}
+//                         className="fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-50"
+//                     >
+//                         <div className="relative bg-white px-14 py-20 rounded-lg shadow-xl flex flex-col items-center space-y-4 w-80">
+//                             <button
+//                                 onClick={() => setShowLoginPopup(false)}
+//                                 className="absolute top-3 right-3 text-red-600 hover:text-red-900 transition"
+//                             >
+//                                 <X className="w-6 h-6" />
+//                             </button>
+//                             <h2 className="text-xl font-semibold">Login</h2>
+//                             <button
+//                                 onClick={handleLogin}
+//                                 className="flex items-center space-x-2 border px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+//                             >
+//                                 <FcGoogle className="w-6 h-6" />
+//                                 <span>Login with Google</span>
+//                             </button>
+//                             <button
+//                                 onClick={() => setShowLoginPopup(false)}
+//                                 className="text-red-500 hover:text-red-700 transition"
+//                             >
+//                                 Cancel
+//                             </button>
+//                         </div>
+//                     </motion.div>
+//                 )}
+//             </AnimatePresence>
+//         </motion.nav>
+//     );
+// };
+
+// export default Navbar;

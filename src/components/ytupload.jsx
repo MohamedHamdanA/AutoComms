@@ -43,6 +43,7 @@ const Ytupload = () => {
             }
         } catch (error) {
             setUploadMessage("Error uploading video.");
+            console.log(error)
         }
         setLoading(false);
         setFile(null);
