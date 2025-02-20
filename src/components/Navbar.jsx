@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User } from "lucide-react";
@@ -15,8 +14,6 @@ const Navbar = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check login status
     const [showLoginPopup, setShowLoginPopup] = useState(false);
-      
-    
 
     useEffect(() => {
         if(checkCookies()){
@@ -98,7 +95,7 @@ const Navbar = () => {
             <div className="hidden md:flex space-x-6">
                 <Link to="/" className="text-gray-700 font-semibold hover:text-blue-600 transition">Home</Link>
                 <Link to="/classes" className="text-gray-700 font-semibold hover:text-blue-600 transition">Classes</Link>
-                <Link to="/Youtubelogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</Link>
+                <Link to="/youtube" className="text-gray-700 font-semibold hover:text-blue-600 transition">YouTube</Link>
                 <Link to="/InstaLogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">Instagram</Link>
                 <Link to="/FaceLogin" className="text-gray-700 font-semibold hover:text-blue-600 transition">Facebook</Link>
             </div>
