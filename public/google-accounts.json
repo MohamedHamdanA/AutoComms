@@ -1,0 +1,15 @@
+{
+    "accounts": [
+      {
+        "name": "Sandeep V AIML",
+        "email": "sandeepv.aiml2023@citchennai.net",
+        "signedIn": true
+      },
+      {
+        "name": "Hamdan AIML",
+        "email": "hamdan.aiml2023@citchennai.net",
+        "signedIn": false
+      }
+    ]
+  }
+  
